@@ -1,9 +1,5 @@
-globie-wordpress-starter-pack
+ramirochaves
 ---
-v 1.8
-
-Starting point for our wordpress themes
-
 
 ## Tech
 
@@ -16,15 +12,6 @@ This works thanks to the great work of:
 - https://github.com/aFarkas/lazysizes
 
 ---
-
-## Create a new theme
-
-```
-git clone git@github.com:interglobalvision/globie-wordpress-starter-pack.git /path/to/new-theme
-cd /path/to/new-theme
-rm -rf .git
-git init
-```
 
 ## Setup
 
@@ -59,19 +46,3 @@ And import css files in `site.styl`:
 *`~` is used to ref `node_modules` inside stylus*
 
 Each package is added differently depending on it's export and nature. Most modern packages are webpack friendly :)
-
-
-
-## Dev
-
-```
-git clone git@github.com:interglobalvision/globie-wordpress-starter-pack.git /path/to/new-theme
-cd /path/to/new-theme
-```
-
-Locally exclude built files and stuff. Edit `.git/info/exclude`:
-
-```
-composer.lock
-dist/
-```
