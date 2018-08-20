@@ -12,7 +12,7 @@
       if (!empty($email)) {
     ?>
       <div class="grid-item">
-        <a href="mailto:<?php echo $email; ?>"><?php echo $email; ?></a>
+        <a href="mailto:<?php echo $email; ?>" class="link-underline"><?php echo $email; ?></a>
       </div>
     <?php
       }
@@ -26,7 +26,7 @@
       if (!empty($pdf)) {
     ?>
       <div class="grid-item">
-        <a href="<?php echo $pdf; ?>">Descargar PDF</a>
+        <a href="<?php echo $pdf; ?>" class="link-underline">Descargar PDF</a>
       </div>
     <?php
       }
