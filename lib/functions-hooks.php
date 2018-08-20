@@ -18,5 +18,10 @@ function create_custom_pages() {
       ));
     }
   }
+
+  // Set static Homepage
+  $home = get_page_by_path('home');
+  update_option( 'page_on_front', $home->ID );
+  update_option( 'show_on_front', 'page' );
 }
 add_filter( 'after_setup_theme', 'create_custom_pages' );
