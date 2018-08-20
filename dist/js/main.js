@@ -83,6 +83,10 @@ var _lazysizes = __webpack_require__(1);
 
 var _lazysizes2 = _interopRequireDefault(_lazysizes);
 
+var _Scratch = __webpack_require__(8);
+
+var _Scratch2 = _interopRequireDefault(_Scratch);
+
 __webpack_require__(3);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -124,6 +128,7 @@ var Site = function () {
 }();
 
 new Site();
+new _Scratch2.default();
 
 /***/ }),
 /* 1 */
@@ -860,6 +865,138 @@ module.exports = function (module) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 4 */,
+/* 5 */,
+/* 6 */,
+/* 7 */,
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/* jshint esversion: 6, browser: true, devel: true, indent: 2, curly: true, eqeqeq: true, futurehostile: true, latedef: true, undef: true, unused: true */
+/* global $, document */
+
+var Scratch = function () {
+  function Scratch() {
+    _classCallCheck(this, Scratch);
+
+    this.mobileThreshold = 601;
+
+    $(window).resize(this.onResize.bind(this));
+
+    $(document).ready(this.onReady.bind(this));
+  }
+
+  _createClass(Scratch, [{
+    key: 'onResize',
+    value: function onResize() {}
+  }, {
+    key: 'onReady',
+    value: function onReady() {
+      //this.loadImages();
+
+      console.log(WP.images);
+    }
+  }, {
+    key: 'getLocalCoords',
+    value: function getLocalCoords(elem, ev) {
+      var ox = 0,
+          oy = 0;
+      var first;
+      var pageX, pageY;
+
+      // Walk back up the tree to calculate the total page offset of the
+      // currentTarget element.  I can't tell you how happy this makes me.
+      // Really.
+      while (elem != null) {
+        ox += elem.offsetLeft;
+        oy += elem.offsetTop;
+        elem = elem.offsetParent;
+      }
+
+      if (ev.hasOwnProperty('changedTouches')) {
+        first = ev.changedTouches[0];
+        pageX = first.pageX;
+        pageY = first.pageY;
+      } else {
+        pageX = ev.pageX;
+        pageY = ev.pageY;
+      }
+
+      return { 'x': pageX - ox, 'y': pageY - oy };
+    }
+
+    /**
+     * Set up the main canvas and listeners
+     */
+
+  }, {
+    key: 'setupCanvases',
+    value: function setupCanvases() {
+      console.log('setupCanvases');
+    }
+
+    /**
+     * Set up the DOM when loading is complete
+     */
+
+  }, {
+    key: 'loadingComplete',
+    value: function loadingComplete() {
+      var loading = document.getElementById('loading');
+      var main = document.getElementById('main');
+
+      loading.className = 'hidden';
+      main.className = '';
+    }
+
+    /**
+     * Handle loading of needed image resources
+     */
+
+  }, {
+    key: 'loadImages',
+    value: function loadImages() {
+      var loadCount = 0;
+      var loadTotal = 0;
+
+      function imageLoaded(e) {
+        loadCount++;
+
+        if (loadCount >= loadTotal) {
+          setupCanvases();
+          loadingComplete();
+        }
+      }
+
+      for (k in image) {
+        if (image.hasOwnProperty(k)) loadTotal++;
+      }for (k in image) {
+        if (image.hasOwnProperty(k)) {
+          image[k].img = document.createElement('img'); // image is global
+          image[k].img.addEventListener('load', imageLoaded, false);
+          image[k].img.src = image[k].url;
+        }
+      }
+    }
+  }]);
+
+  return Scratch;
+}();
+
+exports.default = Scratch;
 
 /***/ })
 /******/ ]);
