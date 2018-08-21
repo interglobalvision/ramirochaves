@@ -888,6 +888,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 /* jshint esversion: 6, browser: true, devel: true, indent: 2, curly: true, eqeqeq: true, futurehostile: true, latedef: true, undef: true, unused: true */
 /* global $, document, WP */
 
+/**
+ * A great deal of this code is thanks to a
+ * public Codepen by Curt Husting.
+ * Thanks Curt!!
+ *
+ * https://codepen.io/curthusting/pen/fkCzh
+ * https://github.com/curthusting
+ */
+
 var Scratch = function () {
   function Scratch() {
     _classCallCheck(this, Scratch);
@@ -908,6 +917,16 @@ var Scratch = function () {
       // Initialize
       this.loadImages();
     }
+
+    /**
+     * Helper function to get the local coords of an event in an element,
+     * since offsetX/offsetY are apparently not entirely supported, but
+     * offsetLeft/offsetTop/pageX/pageY are!
+     *
+     * @param elem element in question
+     * @param ev the event
+     */
+
   }, {
     key: 'getLocalCoords',
     value: function getLocalCoords(elem, ev) {
