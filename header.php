@@ -29,5 +29,5 @@ get_template_part('partials/seo');
 <section id="main-container">
 
   <header id="header">
-    <h1><?php bloginfo('name'); ?></h1>
+    <h1>Ramiro Chaves</h1>
   </header>
