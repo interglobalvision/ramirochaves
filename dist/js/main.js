@@ -886,7 +886,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /* jshint esversion: 6, browser: true, devel: true, indent: 2, curly: true, eqeqeq: true, futurehostile: true, latedef: true, undef: true, unused: true */
-/* global $, document */
+/* global $, document, WP */
 
 var Scratch = function () {
   function Scratch() {
@@ -905,9 +905,8 @@ var Scratch = function () {
   }, {
     key: 'onReady',
     value: function onReady() {
-      //this.loadImages();
-
-      console.log(WP.images);
+      // Initialize
+      this.loadImages();
     }
   }, {
     key: 'getLocalCoords',
@@ -920,7 +919,7 @@ var Scratch = function () {
       // Walk back up the tree to calculate the total page offset of the
       // currentTarget element.  I can't tell you how happy this makes me.
       // Really.
-      while (elem != null) {
+      while (elem !== null) {
         ox += elem.offsetLeft;
         oy += elem.offsetTop;
         elem = elem.offsetParent;
@@ -939,8 +938,8 @@ var Scratch = function () {
     }
 
     /**
-     * Set up the main canvas and listeners
-     */
+    * Set up the main canvas and listeners
+    */
 
   }, {
     key: 'setupCanvases',
@@ -949,18 +948,14 @@ var Scratch = function () {
     }
 
     /**
-     * Set up the DOM when loading is complete
-     */
+    * Set up the DOM when loading is complete
+    */
 
   }, {
     key: 'loadingComplete',
-    value: function loadingComplete() {
-      var loading = document.getElementById('loading');
-      var main = document.getElementById('main');
+    value: function loadingComplete() {}
+    // Show the canvas or something
 
-      loading.className = 'hidden';
-      main.className = '';
-    }
 
     /**
      * Handle loading of needed image resources
@@ -969,25 +964,47 @@ var Scratch = function () {
   }, {
     key: 'loadImages',
     value: function loadImages() {
-      var loadCount = 0;
-      var loadTotal = 0;
+      var _this = this;
 
-      function imageLoaded(e) {
+      var loadCount = 0;
+      var loadTotal = WP.images.length;
+
+      var imageLoaded = function imageLoaded() {
         loadCount++;
 
         if (loadCount >= loadTotal) {
-          setupCanvases();
-          loadingComplete();
+          // All images loaded!
+          _this.setupCanvases();
+          _this.loadingComplete();
         }
-      }
+      };
 
-      for (k in image) {
-        if (image.hasOwnProperty(k)) loadTotal++;
-      }for (k in image) {
-        if (image.hasOwnProperty(k)) {
-          image[k].img = document.createElement('img'); // image is global
-          image[k].img.addEventListener('load', imageLoaded, false);
-          image[k].img.src = image[k].url;
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = WP.images[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var image = _step.value;
+
+          // Create img elements for each image
+          // and save it on the object
+          image.img = document.createElement('img'); // image is global
+          image.img.addEventListener('load', imageLoaded.bind(this), false);
+          image.img.src = image.url;
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
         }
       }
     }
