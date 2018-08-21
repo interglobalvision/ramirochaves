@@ -4,7 +4,7 @@ get_header();
 
 <main id="main-content">
 
-  <canvas id="scribble-pad"></canvas>
+  <canvas id="main-canvas"></canvas>
 
 </main>
 

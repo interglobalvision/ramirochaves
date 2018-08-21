@@ -83,6 +83,10 @@ var _lazysizes = __webpack_require__(1);
 
 var _lazysizes2 = _interopRequireDefault(_lazysizes);
 
+var _Scratch = __webpack_require__(8);
+
+var _Scratch2 = _interopRequireDefault(_Scratch);
+
 __webpack_require__(3);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -124,6 +128,7 @@ var Site = function () {
 }();
 
 new Site();
+new _Scratch2.default();
 
 /***/ }),
 /* 1 */
@@ -860,6 +865,196 @@ module.exports = function (module) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 4 */,
+/* 5 */,
+/* 6 */,
+/* 7 */,
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/* jshint esversion: 6, browser: true, devel: true, indent: 2, curly: true, eqeqeq: true, futurehostile: true, latedef: true, undef: true, unused: true */
+/* global $, document, WP */
+
+/**
+ * A great deal of this code is thanks to a
+ * public Codepen by Curt Husting.
+ * Thanks Curt!!
+ *
+ * https://codepen.io/curthusting/pen/fkCzh
+ * https://github.com/curthusting
+ */
+
+var Scratch = function () {
+  function Scratch() {
+    _classCallCheck(this, Scratch);
+
+    this.mobileThreshold = 601;
+
+    $(window).resize(this.onResize.bind(this));
+
+    $(document).ready(this.onReady.bind(this));
+  }
+
+  _createClass(Scratch, [{
+    key: 'onResize',
+    value: function onResize() {}
+  }, {
+    key: 'onReady',
+    value: function onReady() {
+      if (WP.images !== undefined) {
+        this.image = WP.images;
+
+        // Init
+        this.loadImages();
+      }
+    }
+
+    /**
+     * Helper function to get the local coords of an event in an element,
+     * since offsetX/offsetY are apparently not entirely supported, but
+     * offsetLeft/offsetTop/pageX/pageY are!
+     *
+     * @param elem element in question
+     * @param ev the event
+     */
+
+  }, {
+    key: 'getLocalCoords',
+    value: function getLocalCoords(elem, ev) {
+      var ox = 0,
+          oy = 0;
+      var first;
+      var pageX, pageY;
+
+      // Walk back up the tree to calculate the total page offset of the
+      // currentTarget element.  I can't tell you how happy this makes me.
+      // Really.
+      while (elem !== null) {
+        ox += elem.offsetLeft;
+        oy += elem.offsetTop;
+        elem = elem.offsetParent;
+      }
+
+      if (ev.hasOwnProperty('changedTouches')) {
+        first = ev.changedTouches[0];
+        pageX = first.pageX;
+        pageY = first.pageY;
+      } else {
+        pageX = ev.pageX;
+        pageY = ev.pageY;
+      }
+
+      return { 'x': pageX - ox, 'y': pageY - oy };
+    }
+
+    /**
+    * Set up the canvases
+    */
+
+  }, {
+    key: 'setupCanvases',
+    value: function setupCanvases() {
+      var mainCanvas = document.getElementById('main-canvas');
+
+      // Set main canvas to width and height of window
+      mainCanvas.width = window.innerWidth;
+      mainCanvas.height = window.innerHeight;
+
+      this.canvas = [];
+
+      for (var i = 0; i < this.image.length; i++) {
+        // Create temp and draw canvases for each image
+        this.canvas[i] = {
+          'temp': document.createElement('canvas'),
+          'draw': document.createElement('canvas')
+        };
+
+        // Set canvases to width and height of main canvas
+        this.canvas[i].temp.width = this.canvas[i].draw.width = mainCanvas.width;
+        this.canvas[i].temp.height = this.canvas[i].draw.height = mainCanvas.height;
+      }
+    }
+
+    /**
+    * Set up the DOM when loading is complete
+    */
+
+  }, {
+    key: 'loadingComplete',
+    value: function loadingComplete() {}
+    // Show the canvas or something
+
+
+    /**
+     * Handle loading of needed image resources
+     */
+
+  }, {
+    key: 'loadImages',
+    value: function loadImages() {
+      var _this = this;
+
+      var loadCount = 0;
+      var loadTotal = this.image.length;
+
+      var imageLoaded = function imageLoaded() {
+        loadCount++;
+
+        if (loadCount >= loadTotal) {
+          // All images loaded!
+          _this.setupCanvases();
+          _this.loadingComplete();
+        }
+      };
+
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = this.image[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var image = _step.value;
+
+          // Create img elements for each image
+          // and save it on the object
+          image.img = document.createElement('img'); // image is global
+          image.img.addEventListener('load', imageLoaded.bind(this), false);
+          image.img.src = image.url;
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+    }
+  }]);
+
+  return Scratch;
+}();
+
+exports.default = Scratch;
 
 /***/ })
 /******/ ]);

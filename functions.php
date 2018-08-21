@@ -15,6 +15,24 @@ function scripts_and_styles_method() {
     'isAdmin' => $is_admin,
   );
 
+  $home_page = get_page_by_path('home');
+
+  if(!empty($home_page)) {
+    $scratch_images = get_post_meta($home_page->ID, '_igv_scratch_images', true);
+
+    if(!empty($scratch_images)) {
+      $image_array = array();
+
+      foreach ($scratch_images as $key => $value) {
+        array_push($image_array, (object) array(
+          'url' => $value,
+        ));
+      }
+
+      $javascriptVars['images'] = $image_array;
+    }
+  }
+
   wp_register_script('javascript-main', $javascriptMain);
   wp_localize_script('javascript-main', 'WP', $javascriptVars);
   wp_enqueue_script('javascript-main', $javascriptMain, '', '', true);

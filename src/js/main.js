@@ -4,6 +4,8 @@
 // Import dependencies
 import lazySizes from 'lazysizes';
 
+import Scratch from './Scratch';
+
 // Import style
 import '../styl/site.styl';
 
@@ -37,3 +39,4 @@ class Site {
 }
 
 new Site();
+new Scratch();

@@ -76,8 +76,8 @@ function igv_cmb_metaboxes() {
     ) );
 
     $home_metabox->add_field( array(
-      'name'       => esc_html__( 'Scribble Images', 'cmb2' ),
-      'id'         => $prefix . 'scribble_images',
+      'name'       => esc_html__( 'Scratch Images', 'cmb2' ),
+      'id'         => $prefix . 'scratch_images',
       'type'       => 'file_list',
       'preview_size' => 'large', // Default: array( 50, 50 )
       'query_args' => array( 'type' => 'image' ),
