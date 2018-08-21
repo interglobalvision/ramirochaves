@@ -914,8 +914,10 @@ var Scratch = function () {
   }, {
     key: 'onReady',
     value: function onReady() {
-      // Initialize
-      this.loadImages();
+      if (WP.images !== undefined) {
+        // Initialize
+        this.loadImages();
+      }
     }
 
     /**
@@ -985,8 +987,9 @@ var Scratch = function () {
     value: function loadImages() {
       var _this = this;
 
+      this.images = WP.images;
       var loadCount = 0;
-      var loadTotal = WP.images.length;
+      var loadTotal = this.images.length;
 
       var imageLoaded = function imageLoaded() {
         loadCount++;
@@ -1003,7 +1006,7 @@ var Scratch = function () {
       var _iteratorError = undefined;
 
       try {
-        for (var _iterator = WP.images[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        for (var _iterator = this.images[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
           var image = _step.value;
 
           // Create img elements for each image

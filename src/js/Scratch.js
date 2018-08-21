@@ -24,8 +24,10 @@ class Scratch {
   }
 
   onReady() {
-    // Initialize
-    this.loadImages();
+    if (WP.images !== undefined) {
+      // Initialize
+      this.loadImages();
+    }
   }
 
   /**
@@ -80,8 +82,9 @@ class Scratch {
    * Handle loading of needed image resources
    */
   loadImages() {
+    this.images = WP.images;
     let loadCount = 0;
-    let loadTotal = WP.images.length;
+    let loadTotal = this.images.length;
 
     const imageLoaded = () => {
       loadCount++;
@@ -93,7 +96,7 @@ class Scratch {
       }
     };
 
-    for (let image of WP.images) {
+    for (let image of this.images) {
       // Create img elements for each image
       // and save it on the object
       image.img = document.createElement('img'); // image is global
