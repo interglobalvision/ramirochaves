@@ -915,7 +915,7 @@ var Scratch = function () {
     key: 'onReady',
     value: function onReady() {
       if (WP.images !== undefined) {
-        this.images = WP.images;
+        this.image = WP.images;
 
         // Init
         this.loadImages();
@@ -968,6 +968,24 @@ var Scratch = function () {
     key: 'setupCanvases',
     value: function setupCanvases() {
       console.log('setupCanvases');
+      var c = document.getElementById('main-canvas');
+
+      c.width = window.innerWidth;
+      c.height = window.innerHeight;
+
+      this.canvas = [];
+
+      for (var i = 0; i < this.image.length; i++) {
+        this.canvas[i] = {
+          'temp': document.createElement('canvas'),
+          'draw': document.createElement('canvas')
+        };
+
+        this.canvas[i].temp.width = this.canvas[i].draw.width = c.width;
+        this.canvas[i].temp.height = this.canvas[i].draw.height = c.height;
+      }
+
+      console.log(this.canvas);
     }
 
     /**
@@ -990,7 +1008,7 @@ var Scratch = function () {
       var _this = this;
 
       var loadCount = 0;
-      var loadTotal = this.images.length;
+      var loadTotal = this.image.length;
 
       var imageLoaded = function imageLoaded() {
         loadCount++;
@@ -1007,7 +1025,7 @@ var Scratch = function () {
       var _iteratorError = undefined;
 
       try {
-        for (var _iterator = this.images[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        for (var _iterator = this.image[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
           var image = _step.value;
 
           // Create img elements for each image

@@ -25,7 +25,7 @@ class Scratch {
 
   onReady() {
     if (WP.images !== undefined) {
-      this.images = WP.images;
+      this.image = WP.images;
 
       // Init
       this.loadImages();
@@ -71,6 +71,24 @@ class Scratch {
   */
   setupCanvases() {
     console.log('setupCanvases');
+    const c = document.getElementById('main-canvas');
+
+  	c.width = window.innerWidth;
+  	c.height = window.innerHeight;
+
+    this.canvas = [];
+
+    for (var i = 0; i < this.image.length; i++) {
+      this.canvas[i] = {
+        'temp': document.createElement('canvas'),
+        'draw': document.createElement('canvas')
+      };
+
+      this.canvas[i].temp.width = this.canvas[i].draw.width = c.width;
+    	this.canvas[i].temp.height = this.canvas[i].draw.height = c.height;
+    }
+
+    console.log(this.canvas);
   }
 
   /**
@@ -85,7 +103,7 @@ class Scratch {
    */
   loadImages() {
     let loadCount = 0;
-    let loadTotal = this.images.length;
+    let loadTotal = this.image.length;
 
     const imageLoaded = () => {
       loadCount++;
@@ -97,7 +115,7 @@ class Scratch {
       }
     };
 
-    for (let image of this.images) {
+    for (let image of this.image) {
       // Create img elements for each image
       // and save it on the object
       image.img = document.createElement('img'); // image is global
