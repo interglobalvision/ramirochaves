@@ -26,7 +26,6 @@ function scripts_and_styles_method() {
       foreach ($scratch_images as $key => $value) {
         array_push($image_array, (object) array(
           'url' => $value,
-          'img' => 'null'
         ));
       }
 
