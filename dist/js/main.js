@@ -915,7 +915,9 @@ var Scratch = function () {
     key: 'onReady',
     value: function onReady() {
       if (WP.images !== undefined) {
-        // Initialize
+        this.images = WP.images;
+
+        // Init
         this.loadImages();
       }
     }
@@ -987,7 +989,6 @@ var Scratch = function () {
     value: function loadImages() {
       var _this = this;
 
-      this.images = WP.images;
       var loadCount = 0;
       var loadTotal = this.images.length;
 

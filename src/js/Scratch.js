@@ -25,7 +25,9 @@ class Scratch {
 
   onReady() {
     if (WP.images !== undefined) {
-      // Initialize
+      this.images = WP.images;
+
+      // Init
       this.loadImages();
     }
   }
@@ -82,7 +84,6 @@ class Scratch {
    * Handle loading of needed image resources
    */
   loadImages() {
-    this.images = WP.images;
     let loadCount = 0;
     let loadTotal = this.images.length;
 
