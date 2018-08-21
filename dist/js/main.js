@@ -961,31 +961,31 @@ var Scratch = function () {
     }
 
     /**
-    * Set up the main canvas and listeners
+    * Set up the canvases
     */
 
   }, {
     key: 'setupCanvases',
     value: function setupCanvases() {
-      console.log('setupCanvases');
-      var c = document.getElementById('main-canvas');
+      var mainCanvas = document.getElementById('main-canvas');
 
-      c.width = window.innerWidth;
-      c.height = window.innerHeight;
+      // Set main canvas to width and height of window
+      mainCanvas.width = window.innerWidth;
+      mainCanvas.height = window.innerHeight;
 
       this.canvas = [];
 
       for (var i = 0; i < this.image.length; i++) {
+        // Create temp and draw canvases for each image
         this.canvas[i] = {
           'temp': document.createElement('canvas'),
           'draw': document.createElement('canvas')
         };
 
-        this.canvas[i].temp.width = this.canvas[i].draw.width = c.width;
-        this.canvas[i].temp.height = this.canvas[i].draw.height = c.height;
+        // Set canvases to width and height of main canvas
+        this.canvas[i].temp.width = this.canvas[i].draw.width = mainCanvas.width;
+        this.canvas[i].temp.height = this.canvas[i].draw.height = mainCanvas.height;
       }
-
-      console.log(this.canvas);
     }
 
     /**
