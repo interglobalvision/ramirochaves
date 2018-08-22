@@ -83,11 +83,11 @@ var _lazysizes = __webpack_require__(1);
 
 var _lazysizes2 = _interopRequireDefault(_lazysizes);
 
-var _Scratch = __webpack_require__(8);
+var _Scratch = __webpack_require__(3);
 
 var _Scratch2 = _interopRequireDefault(_Scratch);
 
-__webpack_require__(3);
+__webpack_require__(4);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -862,16 +862,6 @@ module.exports = function (module) {
 
 /***/ }),
 /* 3 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 4 */,
-/* 5 */,
-/* 6 */,
-/* 7 */,
-/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -961,17 +951,71 @@ var Scratch = function () {
     }
 
     /**
+     * Recomposites the canvases onto the screen
+     */
+
+  }, {
+    key: 'recompositeCanvases',
+    value: function recompositeCanvases() {
+      var tempctx = this.canvas[0].temp.getContext('2d');
+      var mainctx = this.mainCanvas.getContext('2d');
+
+      // Step 1: clear the temp
+      this.canvas[0].temp.width = this.canvas[0].temp.width; // resizing clears
+
+      // Step 2: stamp the draw on the temp (source-over)
+      tempctx.drawImage(this.canvas[0].draw, 0, 0);
+
+      // Step 3: stamp the background on the temp (!! source-atop mode !!)
+      //tempctx.globalCompositeOperation = 'source-atop';
+      //tempctx.drawImage(image[0].img, 0, 0);
+
+      // Step 4: stamp the foreground on the display canvas (source-over)
+      //mainctx.drawImage(image[1].img, 0, 0);
+
+      // Step 5: stamp the temp on the display canvas (source-over)
+      mainctx.drawImage(this.canvas[0].temp, 0, 0);
+    }
+
+    /**
+     * Draw a scratch line
+     *
+     * @param can the canvas
+     * @param x,y the coordinates
+     * @param fresh start a new line if true
+     */
+
+  }, {
+    key: 'scratchLine',
+    value: function scratchLine(can, x, y, fresh) {
+      var ctx = can.getContext('2d');
+      ctx.lineWidth = 50;
+      ctx.lineCap = ctx.lineJoin = 'round';
+      ctx.strokeStyle = '#f00'; // can be any opaque color
+      if (fresh) {
+        ctx.beginPath();
+        // this +0.01 hackishly causes Linux Chrome to draw a
+        // "zero"-length line (a single point), otherwise it doesn't
+        // draw when the mouse is clicked but not moved
+        // Plus x 26 : y 25 for cursor svg offset
+        ctx.moveTo(x + 0.01 + 26, y + 25);
+      }
+      ctx.lineTo(x + 26, y + 25);
+      ctx.stroke();
+    }
+
+    /**
     * Set up the canvases
     */
 
   }, {
     key: 'setupCanvases',
     value: function setupCanvases() {
-      var mainCanvas = document.getElementById('main-canvas');
+      this.mainCanvas = document.getElementById('main-canvas');
 
       // Set main canvas to width and height of window
-      mainCanvas.width = window.innerWidth;
-      mainCanvas.height = window.innerHeight;
+      this.mainCanvas.width = window.innerWidth;
+      this.mainCanvas.height = window.innerHeight;
 
       this.canvas = [];
 
@@ -983,9 +1027,86 @@ var Scratch = function () {
         };
 
         // Set canvases to width and height of main canvas
-        this.canvas[i].temp.width = this.canvas[i].draw.width = mainCanvas.width;
-        this.canvas[i].temp.height = this.canvas[i].draw.height = mainCanvas.height;
+        this.canvas[i].temp.width = this.canvas[i].draw.width = this.mainCanvas.width;
+        this.canvas[i].temp.height = this.canvas[i].draw.height = this.mainCanvas.height;
       }
+
+      // draw the stuff to start
+      this.recompositeCanvases();
+
+      this.mouseDown = false;
+
+      // Bind events
+      this.mainCanvas.addEventListener('mousedown', this.mousedown_handler.bind(this), false);
+      this.mainCanvas.addEventListener('touchstart', this.mousedown_handler.bind(this), false);
+
+      window.addEventListener('mousemove', this.mousemove_handler.bind(this), false);
+      window.addEventListener('touchmove', this.mousemove_handler.bind(this), false);
+
+      window.addEventListener('mouseup', this.mouseup_handler.bind(this), false);
+      window.addEventListener('touchend', this.mouseup_handler.bind(this), false);
+    }
+
+    /**
+    * On mouse down, draw a line starting fresh
+    */
+
+  }, {
+    key: 'mousedown_handler',
+    value: function mousedown_handler(e) {
+      var local = this.getLocalCoords(this.mainCanvas, e);
+      this.mouseDown = true;
+
+      this.scratchLine(this.canvas[0].draw, local.x, local.y, true);
+      this.recompositeCanvases();
+
+      if (e.cancelable) {
+        e.preventDefault();
+      }
+      return false;
+    }
+
+    /**
+     * On mouse move, if mouse down, draw a line
+     *
+     * We do this on the window to smoothly handle mousing outside
+     * the canvas
+     */
+
+  }, {
+    key: 'mousemove_handler',
+    value: function mousemove_handler(e) {
+      if (!this.mouseDown) {
+        return true;
+      }
+
+      var local = this.getLocalCoords(this.mainCanvas, e);
+
+      this.scratchLine(this.canvas[0].draw, local.x, local.y, false);
+      this.recompositeCanvases();
+
+      if (e.cancelable) {
+        e.preventDefault();
+      }
+      return false;
+    }
+
+    /**
+     * On mouseup.  (Listens on window to catch out-of-canvas events.)
+     */
+
+  }, {
+    key: 'mouseup_handler',
+    value: function mouseup_handler(e) {
+      if (this.mouseDown) {
+        this.mouseDown = false;
+        if (e.cancelable) {
+          e.preventDefault();
+        }
+        return false;
+      }
+
+      return true;
     }
 
     /**
@@ -994,9 +1115,10 @@ var Scratch = function () {
 
   }, {
     key: 'loadingComplete',
-    value: function loadingComplete() {}
-    // Show the canvas or something
-
+    value: function loadingComplete() {
+      // Show the canvas or something
+      console.log('Images loaded! Do something here :)');
+    }
 
     /**
      * Handle loading of needed image resources
@@ -1055,6 +1177,12 @@ var Scratch = function () {
 }();
 
 exports.default = Scratch;
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);
