@@ -197,7 +197,6 @@ class Scratch {
 
 		const local = this.getLocalCoords(this.mainCanvas, e);
 
-    //this.recompositeCanvases();
 		this.scratchLine(this.canvas[0].draw, local.x, local.y, false);
 
 		if (e.cancelable) { e.preventDefault(); }
