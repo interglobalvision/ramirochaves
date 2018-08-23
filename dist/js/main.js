@@ -911,6 +911,28 @@ var Scratch = function () {
         this.loadImages();
       }
     }
+  }, {
+    key: 'shuffle',
+    value: function shuffle(array) {
+      var currentIndex = array.length,
+          temporaryValue,
+          randomIndex;
+
+      // While there remain elements to shuffle...
+      while (0 !== currentIndex) {
+
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+
+        // And swap it with the current element.
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+      }
+
+      return array;
+    }
 
     /**
      * Helper function to get the local coords of an event in an element,
@@ -1168,6 +1190,8 @@ var Scratch = function () {
 
       var loadCount = 0;
       var loadTotal = this.image.length;
+
+      if (WP.shuffle) this.image = this.shuffle(this.image);
 
       var imageLoaded = function imageLoaded() {
         loadCount++;

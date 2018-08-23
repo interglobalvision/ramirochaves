@@ -76,6 +76,12 @@ function igv_cmb_metaboxes() {
     ) );
 
     $home_metabox->add_field( array(
+      'name'       => esc_html__( 'Shuffle Images', 'cmb2' ),
+      'id'         => $prefix . 'shuffle_images',
+      'type'       => 'checkbox',
+    ) );
+
+    $home_metabox->add_field( array(
       'name'       => esc_html__( 'Scratch Images', 'cmb2' ),
       'id'         => $prefix . 'scratch_images',
       'type'       => 'file_list',
