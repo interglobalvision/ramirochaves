@@ -1,5 +1,5 @@
 
-  <footer id="footer">
+  <footer id="footer" class="padding-bottom-tiny">
   <?php
     $home_page = get_page_by_path('home');
 
@@ -7,7 +7,7 @@
       $email = get_post_meta($home_page->ID, '_igv_contact_email', true);
       $pdf = get_post_meta($home_page->ID, '_igv_portfolio_pdf', true);
   ?>
-    <div class="grid-row justify-end">
+    <div class="grid-row justify-end font-light">
     <?php
       if (!empty($email)) {
     ?>
