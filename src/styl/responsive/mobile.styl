@@ -20,6 +20,10 @@ space-maker($margin-micro, $margin-tiny, $margin-small, $margin-basic, $margin-m
 
 font-sizes($font-size-basic, $font-size-extra, $font-size-large, $font-size-mid, $font-size-small, $font-size-tiny)
 
+body,
+#main-canvas
+  cursor: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 52 52' width='52' height='52'%3e%3ccircle cx='26' cy='26' r='25' fill='%23fff' stroke='%23000' stroke-width='2' /%3e%3c/svg%3e") 25 25, pointer
+
 #header
   position: absolute
   top: 0
@@ -30,12 +34,12 @@ font-sizes($font-size-basic, $font-size-extra, $font-size-large, $font-size-mid,
   flex-direction: column
   justify-content: center
   text-align: center
+  pointer-events: none
 
 #main-canvas
   position: absolute
   top: 0
   left: 0
-  cursor: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 52 52' width='52' height='52'%3e%3ccircle cx='26' cy='26' r='25' fill='%23fff' stroke='%23000' stroke-width='2' /%3e%3c/svg%3e"), pointer
 
 #footer
   position: fixed
