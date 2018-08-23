@@ -911,6 +911,13 @@ var Scratch = function () {
         this.loadImages();
       }
     }
+
+    /**
+     * Helper function to randomly shuffle array
+     *
+     * @param array array to shuffle
+     */
+
   }, {
     key: 'shuffle',
     value: function shuffle(array) {

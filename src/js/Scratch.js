@@ -32,6 +32,11 @@ class Scratch {
     }
   }
 
+  /**
+   * Helper function to randomly shuffle array
+   *
+   * @param array array to shuffle
+   */
   shuffle(array) {
     let currentIndex = array.length, temporaryValue, randomIndex;
 
