@@ -15,8 +15,8 @@ function scripts_and_styles_method() {
     'isAdmin' => $is_admin,
   );
 
+  // Add home page meta to javascriptVars
   $home_page = get_page_by_path('home');
-
   if(!empty($home_page)) {
     $scratch_images = get_post_meta($home_page->ID, '_igv_scratch_images', true);
     $shuffle_images = get_post_meta($home_page->ID, '_igv_shuffle_images', true);
