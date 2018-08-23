@@ -72,7 +72,7 @@ class Scratch {
   recompositeCanvases() {
   	const mainctx = this.mainCanvas.getContext('2d');
 
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < this.canvas.length; i++) {
       const tempctx = this.canvas[i].temp.getContext('2d');
       const drawctxNext = this.canvas[i + 1] !== undefined ? this.canvas[i + 1].draw.getContext('2d') : null;
 
@@ -95,9 +95,13 @@ class Scratch {
         drawctxNext.drawImage(this.canvas[i].draw, 0, 0);
       }
 
+      // Calculate centered image position
+      const imageX = (this.mainCanvas.width - this.image[i].img.width) / 2;
+      const imageY = (this.mainCanvas.height - this.image[i].img.height) / 2;
+
       // Stamp image[i] to [i].temp (source-atop)
       tempctx.globalCompositeOperation = 'source-atop';
-      tempctx.drawImage(this.image[i].img, 0, 0);
+      tempctx.drawImage(this.image[i].img, imageX, imageY);
 
       // Stamp [i].temp to mainCanvas
       mainctx.drawImage(this.canvas[i].temp, 0, 0);
@@ -114,9 +118,9 @@ class Scratch {
    */
   scratchLine(can, x, y, fresh) {
   	var ctx = can.getContext('2d');
-  	ctx.lineWidth = 50;
+  	ctx.lineWidth = 100;
   	ctx.lineCap = ctx.lineJoin = 'round';
-  	ctx.strokeStyle = '#f00'; // can be any opaque color
+  	ctx.strokeStyle = '#fff'; // can be any opaque color
   	if (fresh) {
   		ctx.beginPath();
   		// this +0.01 hackishly causes Linux Chrome to draw a
@@ -176,7 +180,6 @@ class Scratch {
 		const local = this.getLocalCoords(this.mainCanvas, e);
 		this.mouseDown = true;
 
-    //this.recompositeCanvases();
 		this.scratchLine(this.canvas[0].draw, local.x, local.y, true);
 
 		if (e.cancelable) { e.preventDefault(); }
@@ -207,7 +210,9 @@ class Scratch {
 	mouseup_handler(e) {
 		if (this.mouseDown) {
 			this.mouseDown = false;
+
       this.recompositeCanvases();
+
       // clear canvas
       this.canvas[0].draw.width = this.canvas[0].draw.width;
 

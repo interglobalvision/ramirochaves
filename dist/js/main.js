@@ -959,7 +959,7 @@ var Scratch = function () {
     value: function recompositeCanvases() {
       var mainctx = this.mainCanvas.getContext('2d');
 
-      for (var i = 0; i < 3; i++) {
+      for (var i = 0; i < this.canvas.length; i++) {
         var tempctx = this.canvas[i].temp.getContext('2d');
         var drawctxNext = this.canvas[i + 1] !== undefined ? this.canvas[i + 1].draw.getContext('2d') : null;
 
@@ -982,9 +982,13 @@ var Scratch = function () {
           drawctxNext.drawImage(this.canvas[i].draw, 0, 0);
         }
 
+        // Calculate centered image position
+        var imageX = (this.mainCanvas.width - this.image[i].img.width) / 2;
+        var imageY = (this.mainCanvas.height - this.image[i].img.height) / 2;
+
         // Stamp image[i] to [i].temp (source-atop)
         tempctx.globalCompositeOperation = 'source-atop';
-        tempctx.drawImage(this.image[i].img, 0, 0);
+        tempctx.drawImage(this.image[i].img, imageX, imageY);
 
         // Stamp [i].temp to mainCanvas
         mainctx.drawImage(this.canvas[i].temp, 0, 0);
@@ -1003,9 +1007,9 @@ var Scratch = function () {
     key: 'scratchLine',
     value: function scratchLine(can, x, y, fresh) {
       var ctx = can.getContext('2d');
-      ctx.lineWidth = 50;
+      ctx.lineWidth = 100;
       ctx.lineCap = ctx.lineJoin = 'round';
-      ctx.strokeStyle = '#f00'; // can be any opaque color
+      ctx.strokeStyle = '#fff'; // can be any opaque color
       if (fresh) {
         ctx.beginPath();
         // this +0.01 hackishly causes Linux Chrome to draw a
@@ -1071,7 +1075,6 @@ var Scratch = function () {
       var local = this.getLocalCoords(this.mainCanvas, e);
       this.mouseDown = true;
 
-      //this.recompositeCanvases();
       this.scratchLine(this.canvas[0].draw, local.x, local.y, true);
 
       if (e.cancelable) {
@@ -1114,7 +1117,9 @@ var Scratch = function () {
     value: function mouseup_handler(e) {
       if (this.mouseDown) {
         this.mouseDown = false;
+
         this.recompositeCanvases();
+
         // clear canvas
         this.canvas[0].draw.width = this.canvas[0].draw.width;
 
