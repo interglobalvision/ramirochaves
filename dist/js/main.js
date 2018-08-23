@@ -1098,14 +1098,14 @@ var Scratch = function () {
       this.mouseDown = false;
 
       // Bind events
-      this.strokeCanvas.addEventListener('mousedown', this.mousedown_handler.bind(this), { passive: true });
-      this.strokeCanvas.addEventListener('touchstart', this.mousedown_handler.bind(this), { passive: true });
+      this.strokeCanvas.addEventListener('mousedown', this.mousedown_handler.bind(this), false);
+      this.strokeCanvas.addEventListener('touchstart', this.mousedown_handler.bind(this), false);
 
-      window.addEventListener('mousemove', this.mousemove_handler.bind(this), { passive: true });
-      window.addEventListener('touchmove', this.mousemove_handler.bind(this), { passive: true });
+      window.addEventListener('mousemove', this.mousemove_handler.bind(this), false);
+      window.addEventListener('touchmove', this.mousemove_handler.bind(this), false);
 
-      window.addEventListener('mouseup', this.mouseup_handler.bind(this), { passive: true });
-      window.addEventListener('touchend', this.mouseup_handler.bind(this), { passive: true });
+      window.addEventListener('mouseup', this.mouseup_handler.bind(this), false);
+      window.addEventListener('touchend', this.mouseup_handler.bind(this), false);
     }
 
     /**
