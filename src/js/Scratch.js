@@ -70,24 +70,38 @@ class Scratch {
    * Recomposites the canvases onto the screen
    */
   recompositeCanvases() {
-  	const tempctx = this.canvas[0].temp.getContext('2d');
   	const mainctx = this.mainCanvas.getContext('2d');
 
-    // Step 1: clear the temp
-  	this.canvas[0].temp.width = this.canvas[0].temp.width; // resizing clears
+    for (let i = 0; i < 3; i++) {
+      const tempctx = this.canvas[i].temp.getContext('2d');
+      const drawctxNext = this.canvas[i + 1] !== undefined ? this.canvas[i + 1].draw.getContext('2d') : null;
 
-  	// Step 2: stamp the draw on the temp (source-over)
-  	tempctx.drawImage(this.canvas[0].draw, 0, 0);
+      if (drawctxNext !== null) {
+        // Clear [i + 1].draw
+        this.canvas[i + 1].draw.width = this.canvas[i + 1].draw.width;
 
-  	// Step 3: stamp the background on the temp (!! source-atop mode !!)
-  	//tempctx.globalCompositeOperation = 'source-atop';
-  	//tempctx.drawImage(image[0].img, 0, 0);
+        // Stamp [i].temp to [i + 1].draw
+        drawctxNext.globalCompositeOperation = 'source-over';
+        drawctxNext.drawImage(this.canvas[i].temp, 0, 0);
+      }
 
-  	// Step 4: stamp the foreground on the display canvas (source-over)
-  	//mainctx.drawImage(image[1].img, 0, 0);
+      // Stamp [i].draw to [i].temp
+      tempctx.globalCompositeOperation = 'source-over';
+      tempctx.drawImage(this.canvas[i].draw, 0, 0);
 
-  	// Step 5: stamp the temp on the display canvas (source-over)
-  	mainctx.drawImage(this.canvas[0].temp, 0, 0);
+      if (drawctxNext !== null) {
+        // Stamp [i].draw to [i + 1].draw (destination-in)
+        drawctxNext.globalCompositeOperation = 'destination-in';
+        drawctxNext.drawImage(this.canvas[i].draw, 0, 0);
+      }
+
+      // Stamp image[i] to [i].temp (source-atop)
+      tempctx.globalCompositeOperation = 'source-atop';
+      tempctx.drawImage(this.image[i].img, 0, 0);
+
+      // Stamp [i].temp to mainCanvas
+      mainctx.drawImage(this.canvas[i].temp, 0, 0);
+    }
 
   }
 
@@ -108,10 +122,10 @@ class Scratch {
   		// this +0.01 hackishly causes Linux Chrome to draw a
   		// "zero"-length line (a single point), otherwise it doesn't
   		// draw when the mouse is clicked but not moved
-      // Plus x 26 : y 25 for cursor svg offset
-  		ctx.moveTo(x+0.01+26, y+25);
+      // Plus 1 for the border
+  		ctx.moveTo(x+0.01+1, y);
   	}
-  	ctx.lineTo(x+26, y+25);
+  	ctx.lineTo(x+1, y);
   	ctx.stroke();
   }
 
@@ -162,8 +176,8 @@ class Scratch {
 		const local = this.getLocalCoords(this.mainCanvas, e);
 		this.mouseDown = true;
 
+    //this.recompositeCanvases();
 		this.scratchLine(this.canvas[0].draw, local.x, local.y, true);
-		this.recompositeCanvases();
 
 		if (e.cancelable) { e.preventDefault(); }
 		return false;
@@ -180,8 +194,8 @@ class Scratch {
 
 		const local = this.getLocalCoords(this.mainCanvas, e);
 
+    //this.recompositeCanvases();
 		this.scratchLine(this.canvas[0].draw, local.x, local.y, false);
-		this.recompositeCanvases();
 
 		if (e.cancelable) { e.preventDefault(); }
 		return false;
@@ -193,6 +207,10 @@ class Scratch {
 	mouseup_handler(e) {
 		if (this.mouseDown) {
 			this.mouseDown = false;
+      this.recompositeCanvases();
+      // clear canvas
+      this.canvas[0].draw.width = this.canvas[0].draw.width;
+
 			if (e.cancelable) { e.preventDefault(); }
 			return false;
 		}
