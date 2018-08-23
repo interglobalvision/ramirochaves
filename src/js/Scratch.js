@@ -41,9 +41,9 @@ class Scratch {
    * @param ev the event
    */
   getLocalCoords(elem, ev) {
-    var ox = 0, oy = 0;
-    var first;
-    var pageX, pageY;
+    let ox = 0, oy = 0;
+    let first;
+    let pageX, pageY;
 
     // Walk back up the tree to calculate the total page offset of the
     // currentTarget element.  I can't tell you how happy this makes me.
@@ -116,21 +116,34 @@ class Scratch {
    * @param x,y the coordinates
    * @param fresh start a new line if true
    */
-  scratchLine(can, x, y, fresh) {
-  	var ctx = can.getContext('2d');
-  	ctx.lineWidth = 100;
-  	ctx.lineCap = ctx.lineJoin = 'round';
-  	ctx.strokeStyle = '#fff'; // can be any opaque color
+  scratchLine(x, y, fresh) {
+  	const drawctx = this.canvas[0].draw.getContext('2d');
+    const strokectx = this.strokeCanvas.getContext('2d');
+
+  	drawctx.lineWidth = strokectx.lineWidth = 100;
+  	drawctx.lineCap = drawctx.lineJoin = strokectx.lineCap = strokectx.lineJoin = 'round';
+
+  	drawctx.strokeStyle = '#fff'; // can be any opaque color
+    strokectx.strokeStyle = '#000';
+
   	if (fresh) {
-  		ctx.beginPath();
+  		drawctx.beginPath();
+      strokectx.beginPath();
+
   		// this +0.01 hackishly causes Linux Chrome to draw a
   		// "zero"-length line (a single point), otherwise it doesn't
   		// draw when the mouse is clicked but not moved
       // Plus 1 for the border
-  		ctx.moveTo(x+0.01+1, y);
+
+  		drawctx.moveTo(x+0.01+1, y);
+      strokectx.moveTo(x+0.01+1, y);
   	}
-  	ctx.lineTo(x+1, y);
-  	ctx.stroke();
+
+  	drawctx.lineTo(x+1, y);
+    strokectx.lineTo(x+1, y);
+
+  	drawctx.stroke();
+    strokectx.stroke();
   }
 
   /**
@@ -138,14 +151,14 @@ class Scratch {
   */
   setupCanvases() {
     this.mainCanvas = document.getElementById('main-canvas');
+    this.strokeCanvas = document.getElementById('stroke-canvas');
 
-    // Set main canvas to width and height of window
-  	this.mainCanvas.width = window.innerWidth;
-  	this.mainCanvas.height = window.innerHeight;
+    this.mainCanvas.width = window.innerWidth;
+    this.mainCanvas.height = window.innerHeight;
 
     this.canvas = [];
 
-    for (var i = 0; i < this.image.length; i++) {
+    for (let i = 0; i < this.image.length; i++) {
       // Create temp and draw canvases for each image
       this.canvas[i] = {
         'temp': document.createElement('canvas'),
@@ -153,8 +166,8 @@ class Scratch {
       };
 
       // Set canvases to width and height of main canvas
-      this.canvas[i].temp.width = this.canvas[i].draw.width = this.mainCanvas.width;
-    	this.canvas[i].temp.height = this.canvas[i].draw.height = this.mainCanvas.height;
+      this.canvas[i].temp.width = this.canvas[i].draw.width = this.strokeCanvas.width = this.mainCanvas.width;
+    	this.canvas[i].temp.height = this.canvas[i].draw.height = this.strokeCanvas.height = this.mainCanvas.height;
     }
 
     // draw the stuff to start
@@ -163,8 +176,8 @@ class Scratch {
     this.mouseDown = false;
 
     // Bind events
-    this.mainCanvas.addEventListener('mousedown', this.mousedown_handler.bind(this), false);
-  	this.mainCanvas.addEventListener('touchstart', this.mousedown_handler.bind(this), false);
+    this.strokeCanvas.addEventListener('mousedown', this.mousedown_handler.bind(this), false);
+  	this.strokeCanvas.addEventListener('touchstart', this.mousedown_handler.bind(this), false);
 
   	window.addEventListener('mousemove', this.mousemove_handler.bind(this), false);
   	window.addEventListener('touchmove', this.mousemove_handler.bind(this), false);
@@ -180,7 +193,7 @@ class Scratch {
 		const local = this.getLocalCoords(this.mainCanvas, e);
 		this.mouseDown = true;
 
-		this.scratchLine(this.canvas[0].draw, local.x, local.y, true);
+		this.scratchLine(local.x, local.y, true);
 
 		if (e.cancelable) { e.preventDefault(); }
 		return false;
@@ -197,7 +210,7 @@ class Scratch {
 
 		const local = this.getLocalCoords(this.mainCanvas, e);
 
-		this.scratchLine(this.canvas[0].draw, local.x, local.y, false);
+		this.scratchLine(local.x, local.y, false);
 
 		if (e.cancelable) { e.preventDefault(); }
 		return false;
@@ -213,6 +226,7 @@ class Scratch {
       this.recompositeCanvases();
 
       // clear canvas
+      this.strokeCanvas.width = this.strokeCanvas.width;
       this.canvas[0].draw.width = this.canvas[0].draw.width;
 
 			if (e.cancelable) { e.preventDefault(); }
