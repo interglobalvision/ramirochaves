@@ -19,14 +19,14 @@
 
       if (!empty($email) && !empty($pdf)) {
     ?>
-      <div class="grid-item"><span>/</span></div>
+      <div><span>/</span></div>
     <?php
       }
 
       if (!empty($pdf)) {
     ?>
       <div class="grid-item">
-        <a href="<?php echo $pdf; ?>" class="link-underline">Descargar PDF</a>
+        <a href="<?php echo $pdf; ?>" class="link-underline">descargar pdf</a>
       </div>
     <?php
       }
