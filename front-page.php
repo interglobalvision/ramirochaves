@@ -5,6 +5,7 @@ get_header();
 <main id="main-content">
 
   <canvas id="main-canvas"></canvas>
+  <canvas id="stroke-canvas"></canvas>
 
 </main>
 

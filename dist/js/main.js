@@ -83,11 +83,11 @@ var _lazysizes = __webpack_require__(1);
 
 var _lazysizes2 = _interopRequireDefault(_lazysizes);
 
-var _Scratch = __webpack_require__(8);
+var _Scratch = __webpack_require__(3);
 
 var _Scratch2 = _interopRequireDefault(_Scratch);
 
-__webpack_require__(3);
+__webpack_require__(4);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -862,16 +862,6 @@ module.exports = function (module) {
 
 /***/ }),
 /* 3 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 4 */,
-/* 5 */,
-/* 6 */,
-/* 7 */,
-/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -923,6 +913,35 @@ var Scratch = function () {
     }
 
     /**
+     * Helper function to randomly shuffle array
+     *
+     * @param array array to shuffle
+     */
+
+  }, {
+    key: 'shuffle',
+    value: function shuffle(array) {
+      var currentIndex = array.length,
+          temporaryValue = void 0,
+          randomIndex = void 0;
+
+      // While there remain elements to shuffle...
+      while (0 !== currentIndex) {
+
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+
+        // And swap it with the current element.
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+      }
+
+      return array;
+    }
+
+    /**
      * Helper function to get the local coords of an event in an element,
      * since offsetX/offsetY are apparently not entirely supported, but
      * offsetLeft/offsetTop/pageX/pageY are!
@@ -936,8 +955,9 @@ var Scratch = function () {
     value: function getLocalCoords(elem, ev) {
       var ox = 0,
           oy = 0;
-      var first;
-      var pageX, pageY;
+      var first = void 0;
+      var pageX = void 0,
+          pageY = void 0;
 
       // Walk back up the tree to calculate the total page offset of the
       // currentTarget element.  I can't tell you how happy this makes me.
@@ -961,17 +981,102 @@ var Scratch = function () {
     }
 
     /**
+     * Recomposites the canvases onto the screen
+     */
+
+  }, {
+    key: 'recompositeCanvases',
+    value: function recompositeCanvases() {
+      var mainctx = this.mainCanvas.getContext('2d');
+
+      for (var i = 0; i < this.canvas.length; i++) {
+        var tempctx = this.canvas[i].temp.getContext('2d');
+        var drawctxNext = this.canvas[i + 1] !== undefined ? this.canvas[i + 1].draw.getContext('2d') : null;
+
+        if (drawctxNext !== null) {
+          // Clear [i + 1].draw
+          this.canvas[i + 1].draw.width = this.canvas[i + 1].draw.width;
+
+          // Stamp [i].temp to [i + 1].draw
+          drawctxNext.globalCompositeOperation = 'source-over';
+          drawctxNext.drawImage(this.canvas[i].temp, 0, 0);
+        }
+
+        // Stamp [i].draw to [i].temp
+        tempctx.globalCompositeOperation = 'source-over';
+        tempctx.drawImage(this.canvas[i].draw, 0, 0);
+
+        if (drawctxNext !== null) {
+          // Stamp [i].draw to [i + 1].draw (destination-in)
+          drawctxNext.globalCompositeOperation = 'destination-in';
+          drawctxNext.drawImage(this.canvas[i].draw, 0, 0);
+        }
+
+        // Calculate centered image position
+        var imageX = (this.mainCanvas.width - this.image[i].img.width) / 2;
+        var imageY = (this.mainCanvas.height - this.image[i].img.height) / 2;
+
+        // Stamp image[i] to [i].temp (source-atop)
+        tempctx.globalCompositeOperation = 'source-atop';
+        tempctx.drawImage(this.image[i].img, imageX, imageY);
+
+        // Stamp [i].temp to mainCanvas
+        mainctx.drawImage(this.canvas[i].temp, 0, 0);
+      }
+    }
+
+    /**
+     * Draw a scratch line
+     *
+     * @param can the canvas
+     * @param x,y the coordinates
+     * @param fresh start a new line if true
+     */
+
+  }, {
+    key: 'scratchLine',
+    value: function scratchLine(x, y, fresh) {
+      var drawctx = this.canvas[0].draw.getContext('2d');
+      var strokectx = this.strokeCanvas.getContext('2d');
+
+      drawctx.lineWidth = strokectx.lineWidth = 100;
+      drawctx.lineCap = drawctx.lineJoin = strokectx.lineCap = strokectx.lineJoin = 'round';
+
+      drawctx.strokeStyle = '#fff'; // can be any opaque color
+      strokectx.strokeStyle = '#000';
+
+      if (fresh) {
+        drawctx.beginPath();
+        strokectx.beginPath();
+
+        // this +0.01 hackishly causes Linux Chrome to draw a
+        // "zero"-length line (a single point), otherwise it doesn't
+        // draw when the mouse is clicked but not moved
+        // Plus 1 for the border
+
+        drawctx.moveTo(x + 0.01 + 1, y);
+        strokectx.moveTo(x + 0.01 + 1, y);
+      }
+
+      drawctx.lineTo(x + 1, y);
+      strokectx.lineTo(x + 1, y);
+
+      drawctx.stroke();
+      strokectx.stroke();
+    }
+
+    /**
     * Set up the canvases
     */
 
   }, {
     key: 'setupCanvases',
     value: function setupCanvases() {
-      var mainCanvas = document.getElementById('main-canvas');
+      this.mainCanvas = document.getElementById('main-canvas');
+      this.strokeCanvas = document.getElementById('stroke-canvas');
 
-      // Set main canvas to width and height of window
-      mainCanvas.width = window.innerWidth;
-      mainCanvas.height = window.innerHeight;
+      this.mainCanvas.width = window.innerWidth;
+      this.mainCanvas.height = window.innerHeight;
 
       this.canvas = [];
 
@@ -983,9 +1088,91 @@ var Scratch = function () {
         };
 
         // Set canvases to width and height of main canvas
-        this.canvas[i].temp.width = this.canvas[i].draw.width = mainCanvas.width;
-        this.canvas[i].temp.height = this.canvas[i].draw.height = mainCanvas.height;
+        this.canvas[i].temp.width = this.canvas[i].draw.width = this.strokeCanvas.width = this.mainCanvas.width;
+        this.canvas[i].temp.height = this.canvas[i].draw.height = this.strokeCanvas.height = this.mainCanvas.height;
       }
+
+      // draw the stuff to start
+      this.recompositeCanvases();
+
+      this.mouseDown = false;
+
+      // Bind events
+      this.strokeCanvas.addEventListener('mousedown', this.mousedown_handler.bind(this), false);
+      this.strokeCanvas.addEventListener('touchstart', this.mousedown_handler.bind(this), false);
+
+      window.addEventListener('mousemove', this.mousemove_handler.bind(this), false);
+      window.addEventListener('touchmove', this.mousemove_handler.bind(this), false);
+
+      window.addEventListener('mouseup', this.mouseup_handler.bind(this), false);
+      window.addEventListener('touchend', this.mouseup_handler.bind(this), false);
+    }
+
+    /**
+     * On mouse down, draw a line starting fresh
+     */
+
+  }, {
+    key: 'mousedown_handler',
+    value: function mousedown_handler(e) {
+      var local = this.getLocalCoords(this.mainCanvas, e);
+      this.mouseDown = true;
+
+      this.scratchLine(local.x, local.y, true);
+
+      if (e.cancelable) {
+        e.preventDefault();
+      }
+      return false;
+    }
+
+    /**
+     * On mouse move, if mouse down, draw a line
+     *
+     * We do this on the window to smoothly handle mousing outside
+     * the canvas
+     */
+
+  }, {
+    key: 'mousemove_handler',
+    value: function mousemove_handler(e) {
+      if (!this.mouseDown) {
+        return true;
+      }
+
+      var local = this.getLocalCoords(this.mainCanvas, e);
+
+      this.scratchLine(local.x, local.y, false);
+
+      if (e.cancelable) {
+        e.preventDefault();
+      }
+      return false;
+    }
+
+    /**
+     * On mouseup.  (Listens on window to catch out-of-canvas events.)
+     */
+
+  }, {
+    key: 'mouseup_handler',
+    value: function mouseup_handler(e) {
+      if (this.mouseDown) {
+        this.mouseDown = false;
+
+        this.recompositeCanvases();
+
+        // clear canvas
+        this.strokeCanvas.width = this.strokeCanvas.width;
+        this.canvas[0].draw.width = this.canvas[0].draw.width;
+
+        if (e.cancelable) {
+          e.preventDefault();
+        }
+        return false;
+      }
+
+      return true;
     }
 
     /**
@@ -994,9 +1181,10 @@ var Scratch = function () {
 
   }, {
     key: 'loadingComplete',
-    value: function loadingComplete() {}
-    // Show the canvas or something
-
+    value: function loadingComplete() {
+      // Show the canvas or something
+      console.log('Images loaded! Do something here :)');
+    }
 
     /**
      * Handle loading of needed image resources
@@ -1009,6 +1197,8 @@ var Scratch = function () {
 
       var loadCount = 0;
       var loadTotal = this.image.length;
+
+      if (WP.shuffle) this.image = this.shuffle(this.image);
 
       var imageLoaded = function imageLoaded() {
         loadCount++;
@@ -1055,6 +1245,12 @@ var Scratch = function () {
 }();
 
 exports.default = Scratch;
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);
