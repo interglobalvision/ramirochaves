@@ -1,5 +1,5 @@
 
-  <footer id="footer">
+  <footer id="footer" class="padding-bottom-tiny">
   <?php
     $home_page = get_page_by_path('home');
 
@@ -11,7 +11,7 @@
     <?php
       if (!empty($email)) {
     ?>
-      <div class="grid-item">
+      <div class="grid-item font-light">
         <a href="mailto:<?php echo $email; ?>" class="link-underline"><?php echo $email; ?></a>
       </div>
     <?php
@@ -19,14 +19,14 @@
 
       if (!empty($email) && !empty($pdf)) {
     ?>
-      <div class="grid-item"><span>/</span></div>
+      <div><span>/</span></div>
     <?php
       }
 
       if (!empty($pdf)) {
     ?>
-      <div class="grid-item">
-        <a href="<?php echo $pdf; ?>" class="link-underline">Descargar PDF</a>
+      <div class="grid-item font-light">
+        <a href="<?php echo $pdf; ?>" class="link-underline">descargar pdf</a>
       </div>
     <?php
       }
