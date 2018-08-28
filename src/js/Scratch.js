@@ -94,7 +94,7 @@ class Scratch {
    * Recomposites the canvases onto the screen
    */
   recompositeCanvases() {
-  	const mainctx = this.mainCanvas.getContext('2d');
+    const mainctx = this.mainCanvas.getContext('2d');
 
     for (let i = 0; i < this.canvas.length; i++) {
       const tempctx = this.canvas[i].temp.getContext('2d');
@@ -141,32 +141,32 @@ class Scratch {
    * @param fresh start a new line if true
    */
   scratchLine(x, y, fresh) {
-  	const drawctx = this.canvas[0].draw.getContext('2d');
+    const drawctx = this.canvas[0].draw.getContext('2d');
     const strokectx = this.strokeCanvas.getContext('2d');
 
-  	drawctx.lineWidth = strokectx.lineWidth = 100;
-  	drawctx.lineCap = drawctx.lineJoin = strokectx.lineCap = strokectx.lineJoin = 'round';
+    drawctx.lineWidth = strokectx.lineWidth = 100;
+    drawctx.lineCap = drawctx.lineJoin = strokectx.lineCap = strokectx.lineJoin = 'round';
 
-  	drawctx.strokeStyle = '#fff'; // can be any opaque color
+    drawctx.strokeStyle = '#fff'; // can be any opaque color
     strokectx.strokeStyle = '#000';
 
-  	if (fresh) {
-  		drawctx.beginPath();
+    if (fresh) {
+      drawctx.beginPath();
       strokectx.beginPath();
 
-  		// this +0.01 hackishly causes Linux Chrome to draw a
-  		// "zero"-length line (a single point), otherwise it doesn't
-  		// draw when the mouse is clicked but not moved
+      // this +0.01 hackishly causes Linux Chrome to draw a
+      // "zero"-length line (a single point), otherwise it doesn't
+      // draw when the mouse is clicked but not moved
       // Plus 1 for the border
 
-  		drawctx.moveTo(x+0.01+1, y);
+      drawctx.moveTo(x+0.01+1, y);
       strokectx.moveTo(x+0.01+1, y);
-  	}
+    }
 
-  	drawctx.lineTo(x+1, y);
+    drawctx.lineTo(x+1, y);
     strokectx.lineTo(x+1, y);
 
-  	drawctx.stroke();
+    drawctx.stroke();
     strokectx.stroke();
   }
 
@@ -191,61 +191,61 @@ class Scratch {
 
       // Set canvases to width and height of main canvas
       this.canvas[i].temp.width = this.canvas[i].draw.width = this.strokeCanvas.width = this.mainCanvas.width;
-    	this.canvas[i].temp.height = this.canvas[i].draw.height = this.strokeCanvas.height = this.mainCanvas.height;
+      this.canvas[i].temp.height = this.canvas[i].draw.height = this.strokeCanvas.height = this.mainCanvas.height;
     }
 
     // draw the stuff to start
-  	this.recompositeCanvases();
+    this.recompositeCanvases();
 
     this.mouseDown = false;
 
     // Bind events
     this.strokeCanvas.addEventListener('mousedown', this.mousedown_handler.bind(this), false);
-  	this.strokeCanvas.addEventListener('touchstart', this.mousedown_handler.bind(this), false);
+    this.strokeCanvas.addEventListener('touchstart', this.mousedown_handler.bind(this), false);
 
-  	window.addEventListener('mousemove', this.mousemove_handler.bind(this), false);
-  	window.addEventListener('touchmove', this.mousemove_handler.bind(this), false);
+    window.addEventListener('mousemove', this.mousemove_handler.bind(this), false);
+    window.addEventListener('touchmove', this.mousemove_handler.bind(this), false);
 
-  	window.addEventListener('mouseup', this.mouseup_handler.bind(this), false);
-  	window.addEventListener('touchend', this.mouseup_handler.bind(this), false);
+    window.addEventListener('mouseup', this.mouseup_handler.bind(this), false);
+    window.addEventListener('touchend', this.mouseup_handler.bind(this), false);
   }
 
   /**
-	 * On mouse down, draw a line starting fresh
-	 */
-	mousedown_handler(e) {
-		const local = this.getLocalCoords(this.mainCanvas, e);
-		this.mouseDown = true;
+   * On mouse down, draw a line starting fresh
+   */
+  mousedown_handler(e) {
+    const local = this.getLocalCoords(this.mainCanvas, e);
+    this.mouseDown = true;
 
-		this.scratchLine(local.x, local.y, true);
+    this.scratchLine(local.x, local.y, true);
 
-		if (e.cancelable) { e.preventDefault(); }
-		return false;
-	}
+    if (e.cancelable) { e.preventDefault(); }
+    return false;
+  }
 
-	/**
-	 * On mouse move, if mouse down, draw a line
-	 *
-	 * We do this on the window to smoothly handle mousing outside
-	 * the canvas
-	 */
-	mousemove_handler(e) {
-		if (!this.mouseDown) { return true; }
+  /**
+   * On mouse move, if mouse down, draw a line
+   *
+   * We do this on the window to smoothly handle mousing outside
+   * the canvas
+   */
+  mousemove_handler(e) {
+    if (!this.mouseDown) { return true; }
 
-		const local = this.getLocalCoords(this.mainCanvas, e);
+    const local = this.getLocalCoords(this.mainCanvas, e);
 
-		this.scratchLine(local.x, local.y, false);
+    this.scratchLine(local.x, local.y, false);
 
-		if (e.cancelable) { e.preventDefault(); }
-		return false;
-	}
+    if (e.cancelable) { e.preventDefault(); }
+    return false;
+  }
 
-	/**
-	 * On mouseup.  (Listens on window to catch out-of-canvas events.)
-	 */
-	mouseup_handler(e) {
-		if (this.mouseDown) {
-			this.mouseDown = false;
+  /**
+   * On mouseup.  (Listens on window to catch out-of-canvas events.)
+   */
+  mouseup_handler(e) {
+    if (this.mouseDown) {
+      this.mouseDown = false;
 
       this.recompositeCanvases();
 
@@ -253,12 +253,12 @@ class Scratch {
       this.strokeCanvas.width = this.strokeCanvas.width;
       this.canvas[0].draw.width = this.canvas[0].draw.width;
 
-			if (e.cancelable) { e.preventDefault(); }
-			return false;
-		}
+      if (e.cancelable) { e.preventDefault(); }
+      return false;
+    }
 
-		return true;
-	}
+    return true;
+  }
 
   /**
   * Set up the DOM when loading is complete

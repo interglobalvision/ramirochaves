@@ -1109,8 +1109,8 @@ var Scratch = function () {
     }
 
     /**
-    * On mouse down, draw a line starting fresh
-    */
+     * On mouse down, draw a line starting fresh
+     */
 
   }, {
     key: 'mousedown_handler',
