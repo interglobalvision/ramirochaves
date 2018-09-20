@@ -78,7 +78,7 @@ class Scratch {
       elem = elem.offsetParent;
     }
 
-    if (ev.hasOwnProperty('changedTouches')) {
+    if ('changedTouches' in ev) {
       first = ev.changedTouches[0];
       pageX = first.pageX;
       pageY = first.pageY;
@@ -214,12 +214,13 @@ class Scratch {
    * On mouse down, draw a line starting fresh
    */
   mousedown_handler(e) {
+    console.log(e);
     const local = this.getLocalCoords(this.mainCanvas, e);
     this.mouseDown = true;
 
     this.scratchLine(local.x, local.y, true);
 
-    if (e.cancelable) { e.preventDefault(); }
+    //if (e.cancelable) { e.preventDefault(); }
     return false;
   }
 
@@ -236,7 +237,7 @@ class Scratch {
 
     this.scratchLine(local.x, local.y, false);
 
-    if (e.cancelable) { e.preventDefault(); }
+    //if (e.cancelable) { e.preventDefault(); }
     return false;
   }
 
@@ -253,7 +254,7 @@ class Scratch {
       this.strokeCanvas.width = this.strokeCanvas.width;
       this.canvas[0].draw.width = this.canvas[0].draw.width;
 
-      if (e.cancelable) { e.preventDefault(); }
+      //if (e.cancelable) { e.preventDefault(); }
       return false;
     }
 
