@@ -14,18 +14,22 @@ class Scratch {
   constructor() {
     this.mobileThreshold = 601;
 
+    this.windowWidth = $(window).width();
+    this.windowHeight = $(window).height();
+
     $(window).resize(this.onResize.bind(this));
 
     $(document).ready(this.onReady.bind(this));
   }
 
   onResize() {
-
+    this.windowWidth = $(window).width();
+    this.windowHeight = $(window).height();
   }
 
   onReady() {
     if (WP.images !== undefined) {
-      this.image = WP.images;
+      this.images = WP.images;
 
       // Init
       this.loadImages();
@@ -78,7 +82,7 @@ class Scratch {
       elem = elem.offsetParent;
     }
 
-    if (ev.hasOwnProperty('changedTouches')) {
+    if ('changedTouches' in ev) {
       first = ev.changedTouches[0];
       pageX = first.pageX;
       pageY = first.pageY;
@@ -120,12 +124,12 @@ class Scratch {
       }
 
       // Calculate centered image position
-      const imageX = (this.mainCanvas.width - this.image[i].img.width) / 2;
-      const imageY = (this.mainCanvas.height - this.image[i].img.height) / 2;
+      const imageX = (this.mainCanvas.width - this.images[i].img.width) / 2;
+      const imageY = (this.mainCanvas.height - this.images[i].img.height) / 2;
 
       // Stamp image[i] to [i].temp (source-atop)
       tempctx.globalCompositeOperation = 'source-atop';
-      tempctx.drawImage(this.image[i].img, imageX, imageY);
+      tempctx.drawImage(this.images[i].img, imageX, imageY);
 
       // Stamp [i].temp to mainCanvas
       mainctx.drawImage(this.canvas[i].temp, 0, 0);
@@ -177,12 +181,12 @@ class Scratch {
     this.mainCanvas = document.getElementById('main-canvas');
     this.strokeCanvas = document.getElementById('stroke-canvas');
 
-    this.mainCanvas.width = window.innerWidth;
-    this.mainCanvas.height = window.innerHeight;
+    this.mainCanvas.width = this.windowWidth;
+    this.mainCanvas.height = this.windowHeight;
 
     this.canvas = [];
 
-    for (let i = 0; i < this.image.length; i++) {
+    for (let i = 0; i < this.images.length; i++) {
       // Create temp and draw canvases for each image
       this.canvas[i] = {
         'temp': document.createElement('canvas'),
@@ -219,7 +223,7 @@ class Scratch {
 
     this.scratchLine(local.x, local.y, true);
 
-    if (e.cancelable) { e.preventDefault(); }
+    //if (e.cancelable) { e.preventDefault(); }
     return false;
   }
 
@@ -236,7 +240,7 @@ class Scratch {
 
     this.scratchLine(local.x, local.y, false);
 
-    if (e.cancelable) { e.preventDefault(); }
+    //if (e.cancelable) { e.preventDefault(); }
     return false;
   }
 
@@ -253,7 +257,7 @@ class Scratch {
       this.strokeCanvas.width = this.strokeCanvas.width;
       this.canvas[0].draw.width = this.canvas[0].draw.width;
 
-      if (e.cancelable) { e.preventDefault(); }
+      //if (e.cancelable) { e.preventDefault(); }
       return false;
     }
 
@@ -273,10 +277,11 @@ class Scratch {
    */
   loadImages() {
     let loadCount = 0;
-    let loadTotal = this.image.length;
+    let loadTotal = this.images.length;
 
-    if (WP.shuffle)
-      this.image = this.shuffle(this.image);
+    if (WP.shuffle) {
+      this.images = this.shuffle(this.images);
+    }
 
     const imageLoaded = () => {
       loadCount++;
@@ -288,13 +293,30 @@ class Scratch {
       }
     };
 
-    for (let image of this.image) {
+    for (let image of this.images) {
       // Create img elements for each image
       // and save it on the object
+      const size = this.getBestImageSize(image.src);
       image.img = document.createElement('img'); // image is global
       image.img.addEventListener('load', imageLoaded.bind(this), false);
-      image.img.src = image.url;
+      image.img.src = image.src[size][0];
     }
+  }
+
+  getBestImageSize(sizes) {
+    let bestSize = 0;
+
+    for (let size in sizes) {
+      if (sizes[size][1] < this.windowWidth || sizes[size][2] < this.windowHeight) {
+        bestSize = size;
+      }
+    }
+
+    return bestSize;
+  }
+
+  resizeCanvas() {
+
   }
 
 }
