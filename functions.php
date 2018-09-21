@@ -23,11 +23,19 @@ function scripts_and_styles_method() {
 
     if(!empty($scratch_images)) {
       $image_array = array();
+      $image_sizes = get_intermediate_image_sizes();
 
       foreach ($scratch_images as $key => $value) {
-        array_push($image_array, (object) array(
-          'url' => $value,
-        ));
+        $image_srcs = array();
+        $image_srcs['src'] = array();
+
+        foreach($image_sizes as $size) {
+          $image_src = wp_get_attachment_image_src($key, $size);
+
+          $image_srcs['src'][$image_src[1]] = $image_src;
+        }
+
+        array_push($image_array, $image_srcs);
       }
 
       $javascriptVars['images'] = $image_array;
