@@ -218,6 +218,7 @@ class Scratch {
    * On mouse down, draw a line starting fresh
    */
   mousedown_handler(e) {
+    console.log(e);
     const local = this.getLocalCoords(this.mainCanvas, e);
     this.mouseDown = true;
 

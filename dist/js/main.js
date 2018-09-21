@@ -1121,6 +1121,7 @@ var Scratch = function () {
   }, {
     key: 'mousedown_handler',
     value: function mousedown_handler(e) {
+      console.log(e);
       var local = this.getLocalCoords(this.mainCanvas, e);
       this.mouseDown = true;
 
