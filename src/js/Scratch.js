@@ -311,11 +311,9 @@ class Scratch {
       // Create img elements for each image
       // and save it on the object
       const size = this.getBestImageSize(image.src);
-      console.log(size);
       image.img = document.createElement('img'); // image is global
       image.img.addEventListener('load', imageLoaded, false);
       image.img.src = image.src[size][0];
-      console.log(image.img.src);
     }
   }
 
@@ -323,13 +321,17 @@ class Scratch {
    * Find best image size for viewport
    */
   getBestImageSize(sizes) {
-    let bestSize = 0;
+    let bestSize = false;
 
     for (let size in sizes) {
       if (sizes[size][1] >= this.windowWidth) {
         bestSize = size;
         break;
       }
+    }
+
+    if (!bestSize) {
+      bestSize = Object.keys(sizes)[Object.keys(sizes).length - 1];
     }
 
     return bestSize;

@@ -1237,11 +1237,9 @@ var Scratch = function () {
           // Create img elements for each image
           // and save it on the object
           var size = this.getBestImageSize(image.src);
-          console.log(size);
           image.img = document.createElement('img'); // image is global
           image.img.addEventListener('load', imageLoaded, false);
           image.img.src = image.src[size][0];
-          console.log(image.img.src);
         }
       } catch (err) {
         _didIteratorError = true;
@@ -1266,13 +1264,17 @@ var Scratch = function () {
   }, {
     key: 'getBestImageSize',
     value: function getBestImageSize(sizes) {
-      var bestSize = 0;
+      var bestSize = false;
 
       for (var size in sizes) {
         if (sizes[size][1] >= this.windowWidth) {
           bestSize = size;
           break;
         }
+      }
+
+      if (!bestSize) {
+        bestSize = Object.keys(sizes)[Object.keys(sizes).length - 1];
       }
 
       return bestSize;
