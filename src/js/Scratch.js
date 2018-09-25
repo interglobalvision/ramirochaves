@@ -311,9 +311,11 @@ class Scratch {
       // Create img elements for each image
       // and save it on the object
       const size = this.getBestImageSize(image.src);
+      console.log(size);
       image.img = document.createElement('img'); // image is global
       image.img.addEventListener('load', imageLoaded, false);
       image.img.src = image.src[size][0];
+      console.log(image.img.src);
     }
   }
 
@@ -324,8 +326,9 @@ class Scratch {
     let bestSize = 0;
 
     for (let size in sizes) {
-      if (sizes[size][1] < this.windowWidth || sizes[size][2] < this.windowHeight) {
+      if (sizes[size][1] >= this.windowWidth) {
         bestSize = size;
+        break;
       }
     }
 
