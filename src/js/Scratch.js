@@ -17,6 +17,10 @@ class Scratch {
     this.windowWidth = $(window).width();
     this.windowHeight = $(window).height();
 
+    this.mousedown_handler = this.mousedown_handler.bind(this);
+    this.mousemove_handler = this.mousemove_handler.bind(this);
+    this.mouseup_handler = this.mouseup_handler.bind(this);
+
     $(window).resize(this.onResize.bind(this));
 
     $(document).ready(this.onReady.bind(this));
@@ -25,6 +29,8 @@ class Scratch {
   onResize() {
     this.windowWidth = $(window).width();
     this.windowHeight = $(window).height();
+
+    this.setupCanvases();
   }
 
   onReady() {
@@ -123,13 +129,21 @@ class Scratch {
         drawctxNext.drawImage(this.canvas[i].draw, 0, 0);
       }
 
+      // The image
+      const img = this.images[i].img;
+
+      // Calculate ratio to scale image to canvas
+      const hRatio = this.mainCanvas.width / img.width;
+      const vRatio = this.mainCanvas.height / img.height;
+      const ratio  = Math.min( hRatio, vRatio );
+
       // Calculate centered image position
-      const imageX = (this.mainCanvas.width - this.images[i].img.width) / 2;
-      const imageY = (this.mainCanvas.height - this.images[i].img.height) / 2;
+      const centerX = ( this.mainCanvas.width - img.width * ratio ) / 2;
+      const centerY = ( this.mainCanvas.height - img.height * ratio ) / 2;
 
       // Stamp image[i] to [i].temp (source-atop)
       tempctx.globalCompositeOperation = 'source-atop';
-      tempctx.drawImage(this.images[i].img, imageX, imageY);
+      tempctx.drawImage(img, 0, 0, img.width, img.height, centerX, centerY, img.width * ratio, img.height * ratio);
 
       // Stamp [i].temp to mainCanvas
       mainctx.drawImage(this.canvas[i].temp, 0, 0);
@@ -204,21 +218,20 @@ class Scratch {
     this.mouseDown = false;
 
     // Bind events
-    this.strokeCanvas.addEventListener('mousedown', this.mousedown_handler.bind(this), false);
-    this.strokeCanvas.addEventListener('touchstart', this.mousedown_handler.bind(this), false);
+    this.strokeCanvas.addEventListener('mousedown', this.mousedown_handler, false);
+    this.strokeCanvas.addEventListener('touchstart', this.mousedown_handler, false);
 
-    window.addEventListener('mousemove', this.mousemove_handler.bind(this), false);
-    window.addEventListener('touchmove', this.mousemove_handler.bind(this), false);
+    window.addEventListener('mousemove', this.mousemove_handler, false);
+    window.addEventListener('touchmove', this.mousemove_handler, false);
 
-    window.addEventListener('mouseup', this.mouseup_handler.bind(this), false);
-    window.addEventListener('touchend', this.mouseup_handler.bind(this), false);
+    window.addEventListener('mouseup', this.mouseup_handler, false);
+    window.addEventListener('touchend', this.mouseup_handler, false);
   }
 
   /**
    * On mouse down, draw a line starting fresh
    */
   mousedown_handler(e) {
-    console.log(e);
     const local = this.getLocalCoords(this.mainCanvas, e);
     this.mouseDown = true;
 
@@ -284,7 +297,7 @@ class Scratch {
       this.images = this.shuffle(this.images);
     }
 
-    const imageLoaded = () => {
+    const imageLoaded = (() => {
       loadCount++;
 
       if (loadCount >= loadTotal) {
@@ -292,18 +305,21 @@ class Scratch {
         this.setupCanvases();
         this.loadingComplete();
       }
-    };
+    }).bind(this);
 
     for (let image of this.images) {
       // Create img elements for each image
       // and save it on the object
       const size = this.getBestImageSize(image.src);
       image.img = document.createElement('img'); // image is global
-      image.img.addEventListener('load', imageLoaded.bind(this), false);
+      image.img.addEventListener('load', imageLoaded, false);
       image.img.src = image.src[size][0];
     }
   }
 
+  /**
+   * Find best image size for viewport
+   */
   getBestImageSize(sizes) {
     let bestSize = 0;
 
@@ -314,10 +330,6 @@ class Scratch {
     }
 
     return bestSize;
-  }
-
-  resizeCanvas() {
-
   }
 
 }
