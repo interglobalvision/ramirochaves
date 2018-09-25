@@ -1028,9 +1028,15 @@ var Scratch = function () {
         var img = this.images[i].img;
 
         // Calculate ratio to scale image to canvas
-        var hRatio = this.mainCanvas.width / img.width;
-        var vRatio = this.mainCanvas.height / img.height;
-        var ratio = Math.min(hRatio, vRatio);
+        var widthRatio = void 0,
+            heightRatio = void 0,
+            ratio = 1;
+
+        if (img.width > this.mainCanvas.width || img.height > this.mainCanvas.height) {
+          widthRatio = this.mainCanvas.width / img.width;
+          heightRatio = this.mainCanvas.height / img.height;
+          ratio = Math.min(widthRatio, heightRatio);
+        }
 
         // Calculate centered image position
         var centerX = (this.mainCanvas.width - img.width * ratio) / 2;
@@ -1274,6 +1280,7 @@ var Scratch = function () {
       }
 
       if (!bestSize) {
+        // Get last key in sizes object
         bestSize = Object.keys(sizes)[Object.keys(sizes).length - 1];
       }
 
