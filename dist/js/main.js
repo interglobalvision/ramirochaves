@@ -903,11 +903,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/* jshint esversion: 6, browser: true, devel: true, indent: 2, curly: true, eqeqeq: true, futurehostile: true, latedef: true, undef: true, unused: true */
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /* jshint esversion: 6, browser: true, devel: true, indent: 2, curly: true, eqeqeq: true, futurehostile: true, latedef: true, undef: true, unused: true */
 /* global $, document, WP */
 
 /**
@@ -918,6 +914,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * https://codepen.io/curthusting/pen/fkCzh
  * https://github.com/curthusting
  */
+
+var _shake = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"shake\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+
+var _shake2 = _interopRequireDefault(_shake);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Scratch = function () {
   function Scratch() {
@@ -1264,6 +1268,7 @@ var Scratch = function () {
         if (loadCount >= loadTotal) {
           // All images loaded!
           _this.setupCanvases();
+          _this.bindShakeReset();
           _this.loadingComplete();
         }
       }.bind(this);
@@ -1336,6 +1341,17 @@ var Scratch = function () {
       this.$brush.css({
         'width': this.brushSize + 'px',
         'height': this.brushSize + 'px'
+      });
+    }
+  }, {
+    key: 'bindShakeReset',
+    value: function bindShakeReset() {
+      var _this2 = this;
+
+      var shakeEvent = new _shake2.default({
+        handler: function handler() {
+          _this2.setupCanvases();
+        }
       });
     }
   }]);

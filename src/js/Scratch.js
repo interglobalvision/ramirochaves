@@ -10,6 +10,8 @@
  * https://github.com/curthusting
  */
 
+import Shake from 'shake';
+
 class Scratch {
   constructor() {
     this.mobileThreshold = 601;
@@ -311,6 +313,7 @@ class Scratch {
       if (loadCount >= loadTotal) {
         // All images loaded!
         this.setupCanvases();
+        this.bindShakeReset();
         this.loadingComplete();
       }
     }).bind(this);
@@ -358,6 +361,14 @@ class Scratch {
     this.$brush.css({
       'width': this.brushSize + 'px',
       'height': this.brushSize + 'px'
+    });
+  }
+
+  bindShakeReset() {
+    const shakeEvent = new Shake({
+      handler: () => {
+        this.setupCanvases();
+      }
     });
   }
 
