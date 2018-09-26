@@ -314,7 +314,7 @@ class Scratch {
       if (loadCount >= loadTotal) {
         // All images loaded!
         this.setupCanvases();
-        this.bindShakeReset();
+        this.bindShake();
         this.loadingComplete();
       }
     }).bind(this);
@@ -365,7 +365,7 @@ class Scratch {
     });
   }
 
-  bindShakeEvent() {
+  bindShake() {
     const shakeEvent = new Shake({
       handler: this.handleShake
     });

@@ -1269,7 +1269,7 @@ var Scratch = function () {
         if (loadCount >= loadTotal) {
           // All images loaded!
           _this.setupCanvases();
-          _this.bindShakeReset();
+          _this.bindShake();
           _this.loadingComplete();
         }
       }.bind(this);
@@ -1345,8 +1345,8 @@ var Scratch = function () {
       });
     }
   }, {
-    key: 'bindShakeEvent',
-    value: function bindShakeEvent() {
+    key: 'bindShake',
+    value: function bindShake() {
       var shakeEvent = new _shake2.default({
         handler: this.handleShake
       });
