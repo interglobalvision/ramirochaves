@@ -935,6 +935,7 @@ var Scratch = function () {
     this.mousedown_handler = this.mousedown_handler.bind(this);
     this.mousemove_handler = this.mousemove_handler.bind(this);
     this.mouseup_handler = this.mouseup_handler.bind(this);
+    this.handleShake = this.handleShake.bind(this);
 
     this.$brush = $('#cursor-brush');
 
@@ -1344,17 +1345,19 @@ var Scratch = function () {
       });
     }
   }, {
-    key: 'bindShakeReset',
-    value: function bindShakeReset() {
-      var _this2 = this;
-
+    key: 'bindShakeEvent',
+    value: function bindShakeEvent() {
       var shakeEvent = new _shake2.default({
-        handler: function handler() {
-          _this2.setupCanvases();
-        }
+        handler: this.handleShake
       });
 
       shakeEvent.start();
+    }
+  }, {
+    key: 'handleShake',
+    value: function handleShake() {
+      this.images = this.shuffle(this.images);
+      this.setupCanvases();
     }
   }]);
 
