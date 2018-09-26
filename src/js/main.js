@@ -13,6 +13,12 @@ class Site {
   constructor() {
     this.mobileThreshold = 601;
 
+    this.$body = $('body');
+    this.$cursorBrush = $('#cursor-brush');
+    this.$cursorLoading = $('#cursor-loading');
+
+    this.updateCursorPosition = this.updateCursorPosition.bind(this);
+
     $(window).resize(this.onResize.bind(this));
 
     $(document).ready(this.onReady.bind(this));
@@ -25,6 +31,7 @@ class Site {
 
   onReady() {
     lazySizes.init();
+    this.bindMouseMove();
 
   }
 
@@ -36,6 +43,33 @@ class Site {
       $(this).html(string);
     });
   }
+
+  bindMouseMove() {
+    window.addEventListener('mousemove', this.updateCursorPosition, false);
+
+    $('footer').hover(
+      function() {
+        $('.cursor').hide();
+      },
+      function() {
+        $('.cursor').show();
+      }
+    );
+  }
+
+  updateCursorPosition(e) {
+    const $cursor = this.$body.hasClass('loading') ? this.$cursorLoading : this.$cursorBrush;
+    const width = $cursor.width();
+    const height = $cursor.height();
+    const left = e.pageX - (width / 2);
+    const top = e.pageY - (height / 2);
+
+    $cursor.css({
+      'left': left + 'px',
+      'top': top + 'px'
+    });
+  }
+
 }
 
 new Site();

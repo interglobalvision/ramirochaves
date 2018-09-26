@@ -21,6 +21,8 @@ class Scratch {
     this.mousemove_handler = this.mousemove_handler.bind(this);
     this.mouseup_handler = this.mouseup_handler.bind(this);
 
+    this.$brush = $('#cursor-brush');
+
     $(window).resize(this.onResize.bind(this));
 
     $(document).ready(this.onReady.bind(this));
@@ -30,6 +32,7 @@ class Scratch {
     this.windowWidth = $(window).width();
     this.windowHeight = $(window).height();
 
+    this.setBrushSize();
     this.setupCanvases();
   }
 
@@ -38,6 +41,7 @@ class Scratch {
       this.images = WP.images;
 
       // Init
+      this.setBrushSize();
       this.loadImages();
     }
   }
@@ -134,7 +138,7 @@ class Scratch {
 
       // Calculate ratio to scale image to canvas
       let widthRatio, heightRatio, ratio = 1;
-      
+
       if (img.width > this.mainCanvas.width || img.height > this.mainCanvas.height) {
         widthRatio = this.mainCanvas.width / img.width;
         heightRatio = this.mainCanvas.height / img.height;
@@ -166,7 +170,7 @@ class Scratch {
     const drawctx = this.canvas[0].draw.getContext('2d');
     const strokectx = this.strokeCanvas.getContext('2d');
 
-    drawctx.lineWidth = strokectx.lineWidth = 100;
+    drawctx.lineWidth = strokectx.lineWidth = this.brushSize;
     drawctx.lineCap = drawctx.lineJoin = strokectx.lineCap = strokectx.lineJoin = 'round';
 
     drawctx.strokeStyle = '#fff'; // can be any opaque color
@@ -287,7 +291,7 @@ class Scratch {
   */
   loadingComplete() {
     // Show the canvas or something
-    console.log('Images loaded! Do something here :)');
+    $('body').removeClass('loading');
   }
 
   /**
@@ -340,6 +344,21 @@ class Scratch {
     }
 
     return bestSize;
+  }
+
+  setBrushSize() {
+    const viewportMax = 1920;
+    const viewportMin = 320;
+    const brushMax = 100;
+    const brushMin = 40;
+
+    const viewportWidth = this.windowWidth > viewportMax ? viewportMax : this.windowWidth;
+    this.brushSize = (((viewportWidth - viewportMin) * (brushMax - brushMin)) / (viewportMax - viewportMin)) + brushMin;
+
+    this.$brush.css({
+      'width': this.brushSize + 'px',
+      'height': this.brushSize + 'px'
+    });
   }
 
 }
