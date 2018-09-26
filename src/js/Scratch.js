@@ -10,7 +10,7 @@
  * https://github.com/curthusting
  */
 
-import Shake from 'shake';
+import Shake from '@zouloux/shake';
 
 class Scratch {
   constructor() {
@@ -44,7 +44,7 @@ class Scratch {
 
       // Init
       this.setBrushSize();
-      this.loadImages();
+      this.loadImages(); 
     }
   }
 
