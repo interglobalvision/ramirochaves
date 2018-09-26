@@ -87,7 +87,7 @@ var _Scratch = __webpack_require__(3);
 
 var _Scratch2 = _interopRequireDefault(_Scratch);
 
-__webpack_require__(4);
+__webpack_require__(5);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -915,7 +915,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
  * https://github.com/curthusting
  */
 
-var _shake = __webpack_require__(9);
+var _shake = __webpack_require__(4);
 
 var _shake2 = _interopRequireDefault(_shake);
 
@@ -1353,6 +1353,8 @@ var Scratch = function () {
           _this2.setupCanvases();
         }
       });
+
+      shakeEvent.start();
     }
   }]);
 
@@ -1363,16 +1365,6 @@ exports.default = Scratch;
 
 /***/ }),
 /* 4 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 5 */,
-/* 6 */,
-/* 7 */,
-/* 8 */,
-/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1499,6 +1491,12 @@ var __WEBPACK_AMD_DEFINE_RESULT__;
 
     return Shake;
 });
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);

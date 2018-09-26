@@ -44,7 +44,7 @@ class Scratch {
 
       // Init
       this.setBrushSize();
-      this.loadImages(); 
+      this.loadImages();
     }
   }
 
@@ -370,6 +370,8 @@ class Scratch {
         this.setupCanvases();
       }
     });
+    
+    shakeEvent.start();
   }
 
 }
