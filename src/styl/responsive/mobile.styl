@@ -20,9 +20,40 @@ space-maker($margin-micro, $margin-tiny, $margin-small, $margin-basic, $margin-m
 
 font-sizes($font-size-basic, $font-size-extra, $font-size-large, $font-size-mid, $font-size-small, $font-size-tiny)
 
-body,
-#stroke-canvas
-  cursor: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 102 102' width='102' height='102'%3e%3ccircle cx='51' cy='51' r='50' fill='%23fff' stroke='%23000' stroke-width='2' /%3e%3c/svg%3e") 50 50, pointer
+body
+  cursor: none
+  &.loading
+    #cursor-loading
+      visibility: visible
+    #cursor-brush
+      visibility: hidden
+
+.cursor
+  pointer-events: none
+  position: fixed
+  top: -9999px
+  left: -9999px
+  z-index: 500
+
+#cursor-loading
+  visibility: hidden
+  width: 50px
+  height: 50px
+  animation: fullRotate 1s linear infinite
+  transform-origin: center
+
+@keyframes fullRotate
+  0%
+    transform: rotate(0deg)
+  50%
+    transform: rotate(180deg)
+  100%
+    transform: rotate(360deg)
+
+#cursor-brush
+  visibility: visible
+  width: 100px
+  height: 100px
 
 #header
   position: absolute
@@ -48,3 +79,6 @@ canvas
   bottom: 0
   left: 0
   width: 100vw
+  cursor: default
+  a
+    cursor: pointer
