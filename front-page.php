@@ -10,5 +10,10 @@ get_header();
 </main>
 
 <?php
+  get_template_part('partials/cursor-loading.svg');
+  get_template_part('partials/cursor-brush.svg');
+?>
+
+<?php
 get_footer();
 ?>
