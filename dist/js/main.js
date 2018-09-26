@@ -1167,11 +1167,11 @@ var Scratch = function () {
       this.strokeCanvas.addEventListener('mousedown', this.mousedown_handler, false);
       this.strokeCanvas.addEventListener('touchstart', this.mousedown_handler, false);
 
-      window.addEventListener('mousemove', this.mousemove_handler, false);
-      window.addEventListener('touchmove', this.mousemove_handler, false);
+      this.strokeCanvas.addEventListener('mousemove', this.mousemove_handler, false);
+      this.strokeCanvas.addEventListener('touchmove', this.mousemove_handler, false);
 
-      window.addEventListener('mouseup', this.mouseup_handler, false);
-      window.addEventListener('touchend', this.mouseup_handler, false);
+      this.strokeCanvas.addEventListener('mouseup', this.mouseup_handler, false);
+      this.strokeCanvas.addEventListener('touchend', this.mouseup_handler, false);
     }
 
     /**
@@ -1186,7 +1186,7 @@ var Scratch = function () {
 
       this.scratchLine(local.x, local.y, true);
 
-      //if (e.cancelable) { e.preventDefault(); }
+      e.preventDefault();
       return false;
     }
 
@@ -1208,7 +1208,7 @@ var Scratch = function () {
 
       this.scratchLine(local.x, local.y, false);
 
-      //if (e.cancelable) { e.preventDefault(); }
+      e.preventDefault();
       return false;
     }
 
@@ -1228,7 +1228,7 @@ var Scratch = function () {
         this.strokeCanvas.width = this.strokeCanvas.width;
         this.canvas[0].draw.width = this.canvas[0].draw.width;
 
-        //if (e.cancelable) { e.preventDefault(); }
+        e.preventDefault();
         return false;
       }
 
