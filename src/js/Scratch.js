@@ -10,6 +10,8 @@
  * https://github.com/curthusting
  */
 
+import Shake from '@zouloux/shake';
+
 class Scratch {
   constructor() {
     this.mobileThreshold = 601;
@@ -20,6 +22,7 @@ class Scratch {
     this.mousedown_handler = this.mousedown_handler.bind(this);
     this.mousemove_handler = this.mousemove_handler.bind(this);
     this.mouseup_handler = this.mouseup_handler.bind(this);
+    this.handleShake = this.handleShake.bind(this);
 
     this.$brush = $('#cursor-brush');
 
@@ -229,11 +232,11 @@ class Scratch {
     this.strokeCanvas.addEventListener('mousedown', this.mousedown_handler, false);
     this.strokeCanvas.addEventListener('touchstart', this.mousedown_handler, false);
 
-    window.addEventListener('mousemove', this.mousemove_handler, false);
-    window.addEventListener('touchmove', this.mousemove_handler, false);
+    this.strokeCanvas.addEventListener('mousemove', this.mousemove_handler, false);
+    this.strokeCanvas.addEventListener('touchmove', this.mousemove_handler, false);
 
-    window.addEventListener('mouseup', this.mouseup_handler, false);
-    window.addEventListener('touchend', this.mouseup_handler, false);
+    this.strokeCanvas.addEventListener('mouseup', this.mouseup_handler, false);
+    this.strokeCanvas.addEventListener('touchend', this.mouseup_handler, false);
   }
 
   /**
@@ -245,7 +248,7 @@ class Scratch {
 
     this.scratchLine(local.x, local.y, true);
 
-    //if (e.cancelable) { e.preventDefault(); }
+    e.preventDefault();
     return false;
   }
 
@@ -262,7 +265,7 @@ class Scratch {
 
     this.scratchLine(local.x, local.y, false);
 
-    //if (e.cancelable) { e.preventDefault(); }
+    e.preventDefault();
     return false;
   }
 
@@ -279,7 +282,7 @@ class Scratch {
       this.strokeCanvas.width = this.strokeCanvas.width;
       this.canvas[0].draw.width = this.canvas[0].draw.width;
 
-      //if (e.cancelable) { e.preventDefault(); }
+      e.preventDefault();
       return false;
     }
 
@@ -311,6 +314,7 @@ class Scratch {
       if (loadCount >= loadTotal) {
         // All images loaded!
         this.setupCanvases();
+        this.bindShake();
         this.loadingComplete();
       }
     }).bind(this);
@@ -359,6 +363,19 @@ class Scratch {
       'width': this.brushSize + 'px',
       'height': this.brushSize + 'px'
     });
+  }
+
+  bindShake() {
+    const shakeEvent = new Shake({
+      handler: this.handleShake
+    });
+
+    shakeEvent.start();
+  }
+
+  handleShake() {
+    this.images = this.shuffle(this.images);
+    this.setupCanvases();
   }
 
 }

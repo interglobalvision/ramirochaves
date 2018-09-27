@@ -87,7 +87,7 @@ var _Scratch = __webpack_require__(3);
 
 var _Scratch2 = _interopRequireDefault(_Scratch);
 
-__webpack_require__(4);
+__webpack_require__(5);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -903,11 +903,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/* jshint esversion: 6, browser: true, devel: true, indent: 2, curly: true, eqeqeq: true, futurehostile: true, latedef: true, undef: true, unused: true */
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /* jshint esversion: 6, browser: true, devel: true, indent: 2, curly: true, eqeqeq: true, futurehostile: true, latedef: true, undef: true, unused: true */
 /* global $, document, WP */
 
 /**
@@ -918,6 +914,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * https://codepen.io/curthusting/pen/fkCzh
  * https://github.com/curthusting
  */
+
+var _shake = __webpack_require__(4);
+
+var _shake2 = _interopRequireDefault(_shake);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Scratch = function () {
   function Scratch() {
@@ -931,6 +935,7 @@ var Scratch = function () {
     this.mousedown_handler = this.mousedown_handler.bind(this);
     this.mousemove_handler = this.mousemove_handler.bind(this);
     this.mouseup_handler = this.mouseup_handler.bind(this);
+    this.handleShake = this.handleShake.bind(this);
 
     this.$brush = $('#cursor-brush');
 
@@ -1163,11 +1168,11 @@ var Scratch = function () {
       this.strokeCanvas.addEventListener('mousedown', this.mousedown_handler, false);
       this.strokeCanvas.addEventListener('touchstart', this.mousedown_handler, false);
 
-      window.addEventListener('mousemove', this.mousemove_handler, false);
-      window.addEventListener('touchmove', this.mousemove_handler, false);
+      this.strokeCanvas.addEventListener('mousemove', this.mousemove_handler, false);
+      this.strokeCanvas.addEventListener('touchmove', this.mousemove_handler, false);
 
-      window.addEventListener('mouseup', this.mouseup_handler, false);
-      window.addEventListener('touchend', this.mouseup_handler, false);
+      this.strokeCanvas.addEventListener('mouseup', this.mouseup_handler, false);
+      this.strokeCanvas.addEventListener('touchend', this.mouseup_handler, false);
     }
 
     /**
@@ -1182,7 +1187,7 @@ var Scratch = function () {
 
       this.scratchLine(local.x, local.y, true);
 
-      //if (e.cancelable) { e.preventDefault(); }
+      e.preventDefault();
       return false;
     }
 
@@ -1204,7 +1209,7 @@ var Scratch = function () {
 
       this.scratchLine(local.x, local.y, false);
 
-      //if (e.cancelable) { e.preventDefault(); }
+      e.preventDefault();
       return false;
     }
 
@@ -1224,7 +1229,7 @@ var Scratch = function () {
         this.strokeCanvas.width = this.strokeCanvas.width;
         this.canvas[0].draw.width = this.canvas[0].draw.width;
 
-        //if (e.cancelable) { e.preventDefault(); }
+        e.preventDefault();
         return false;
       }
 
@@ -1264,6 +1269,7 @@ var Scratch = function () {
         if (loadCount >= loadTotal) {
           // All images loaded!
           _this.setupCanvases();
+          _this.bindShake();
           _this.loadingComplete();
         }
       }.bind(this);
@@ -1338,6 +1344,21 @@ var Scratch = function () {
         'height': this.brushSize + 'px'
       });
     }
+  }, {
+    key: 'bindShake',
+    value: function bindShake() {
+      var shakeEvent = new _shake2.default({
+        handler: this.handleShake
+      });
+
+      shakeEvent.start();
+    }
+  }, {
+    key: 'handleShake',
+    value: function handleShake() {
+      this.images = this.shuffle(this.images);
+      this.setupCanvases();
+    }
   }]);
 
   return Scratch;
@@ -1347,6 +1368,135 @@ exports.default = Scratch;
 
 /***/ }),
 /* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+var __WEBPACK_AMD_DEFINE_RESULT__;
+
+/*
+ * Author: Alex Gibson
+ * https://github.com/alexgibson/shake.js
+ *
+ * Fork Author : Alexis Bouhet
+ * https://github.com/zouloux/shake.js
+ *
+ * License: MIT license
+ */
+
+(function (global, factory) {
+    if (true) {
+        !(__WEBPACK_AMD_DEFINE_RESULT__ = function () {
+            return factory(global, global.document);
+        }.call(exports, __webpack_require__, exports, module),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+    } else if (typeof module !== 'undefined' && module.exports) {
+        module.exports = factory(global, global.document);
+    } else {
+        global.Shake = factory(global, global.document);
+    }
+})(typeof window !== 'undefined' ? window : undefined, function (window, document) {
+
+    'use strict';
+
+    function Shake(options) {
+
+        if (options == null || !('handler' in options)) throw new Error("Shake.js // Options needs an handler property.");
+
+        //feature detect
+        this.hasDeviceMotion = 'ondevicemotion' in window;
+
+        this.options = {
+            threshold: 15, //default velocity threshold for shake to register
+            timeout: 1000 //default interval between events
+        };
+
+        for (var i in options) {
+            if (options.hasOwnProperty(i)) {
+                this.options[i] = options[i];
+            }
+        }
+
+        //use date to prevent multiple shakes firing
+        this.lastTime = new Date();
+
+        //accelerometer values
+        this.lastX = null;
+        this.lastY = null;
+        this.lastZ = null;
+    }
+
+    //reset timer values
+    Shake.prototype.reset = function () {
+        this.lastTime = new Date();
+        this.lastX = null;
+        this.lastY = null;
+        this.lastZ = null;
+    };
+
+    //start listening for devicemotion
+    Shake.prototype.start = function () {
+        this.reset();
+        if (this.hasDeviceMotion) {
+            window.addEventListener('devicemotion', this, false);
+        }
+    };
+
+    //stop listening for devicemotion
+    Shake.prototype.stop = function () {
+        if (this.hasDeviceMotion) {
+            window.removeEventListener('devicemotion', this, false);
+        }
+        this.reset();
+    };
+
+    //calculates if shake did occur
+    Shake.prototype.devicemotion = function (e) {
+        var current = e.accelerationIncludingGravity;
+        var currentTime;
+        var timeDifference;
+        var deltaX = 0;
+        var deltaY = 0;
+        var deltaZ = 0;
+
+        if (this.lastX === null && this.lastY === null && this.lastZ === null) {
+            this.lastX = current.x;
+            this.lastY = current.y;
+            this.lastZ = current.z;
+            return;
+        }
+
+        deltaX = Math.abs(this.lastX - current.x);
+        deltaY = Math.abs(this.lastY - current.y);
+        deltaZ = Math.abs(this.lastZ - current.z);
+
+        if (deltaX > this.options.threshold && deltaY > this.options.threshold || deltaX > this.options.threshold && deltaZ > this.options.threshold || deltaY > this.options.threshold && deltaZ > this.options.threshold) {
+            //calculate time in milliseconds since last shake registered
+            currentTime = new Date();
+            timeDifference = currentTime.getTime() - this.lastTime.getTime();
+
+            if (timeDifference > this.options.timeout) {
+                this.options.handler();
+                this.lastTime = new Date();
+            }
+        }
+
+        this.lastX = current.x;
+        this.lastY = current.y;
+        this.lastZ = current.z;
+    };
+
+    //event handler
+    Shake.prototype.handleEvent = function (e) {
+        if (typeof this[e.type] === 'function') {
+            return this[e.type](e);
+        }
+    };
+
+    return Shake;
+});
+
+/***/ }),
+/* 5 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
