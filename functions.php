@@ -58,6 +58,11 @@ function scripts_and_styles_method() {
 }
 add_action('wp_enqueue_scripts', 'scripts_and_styles_method');
 
+// Override MAX upload size
+@ini_set( 'upload_max_size' , '64M' );
+@ini_set( 'post_max_size', '64M');
+@ini_set( 'max_execution_time', '300' );
+
 // Declare thumbnail sizes
 
 get_template_part( 'lib/thumbnail-sizes' );
