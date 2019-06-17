@@ -21,18 +21,18 @@ add_action( 'init', 'register_cpt_project' );
 function register_cpt_project() {
 
   $labels = array(
-    'name' => _x( 'Projects', 'project' ),
-    'singular_name' => _x( 'Project', 'project' ),
+    'name' => _x( 'Proyectos', 'project' ),
+    'singular_name' => _x( 'Proyecto', 'project' ),
     'add_new' => _x( 'Add New', 'project' ),
-    'add_new_item' => _x( 'Add New Project', 'project' ),
-    'edit_item' => _x( 'Edit Project', 'project' ),
-    'new_item' => _x( 'New Project', 'project' ),
-    'view_item' => _x( 'View Project', 'project' ),
-    'search_items' => _x( 'Search Projects', 'project' ),
+    'add_new_item' => _x( 'Add New Proyecto', 'project' ),
+    'edit_item' => _x( 'Edit Proyecto', 'project' ),
+    'new_item' => _x( 'New Proyecto', 'project' ),
+    'view_item' => _x( 'View Proyecto', 'project' ),
+    'search_items' => _x( 'Search Proyectos', 'project' ),
     'not_found' => _x( 'No projects found', 'project' ),
     'not_found_in_trash' => _x( 'No projects found in Trash', 'project' ),
-    'parent_item_colon' => _x( 'Parent Project:', 'project' ),
-    'menu_name' => _x( 'Projects', 'project' ),
+    'parent_item_colon' => _x( 'Parent Proyecto:', 'project' ),
+    'menu_name' => _x( 'Proyectos', 'project' ),
   );
 
   $args = array(
