@@ -126,6 +126,8 @@ body
   background-color: $color-white
   z-index: 2
   overflow: scroll
+  li
+    margin-bottom: 1em
 
 #header
   .js-menu-trigger
@@ -143,25 +145,36 @@ body
   background-color: $color-white
   z-index: 2
   overflow: scroll
+  font-weight: 300
+  h1, em
+    font-weight: normal
   p
     max-width: 500px
   figcaption
     max-width: 300px
   iframe
     max-width: 100%
-
-.wp-block-embed
-  margin-left: 0
-  margin-right: 0
+  ul, ol
+    margin-left: 1rem
+    margin-bottom: 1rem
+    max-width: 500px
+    ul, ol
+      margin-bottom: 0
+  ul
+    list-style-type: circle
+  ol
+    list-style-type: decimal
+  .wp-block-embed
+    margin-left: 0
+    margin-right: 0
+  .wp-block-image,
+  .wp-block-embed
+    figcaption
+      text-align: left
+      color: $color-black
+      font-size: $font-size-small
 
 .hide-brush
   cursor: default
   a
     cursor: pointer
-
-.wp-block-image,
-.wp-block-embed
-  figcaption
-    text-align: left
-    color: $color-black
-    font-size: $font-size-small

@@ -33,7 +33,7 @@ class Site {
     lazySizes.init();
     this.bindMouseMove();
 
-    if (window.location.search === '?v2') {
+    if (window.location.search === '?v2' || WP.currentId !== WP.homeId) {
       this.currentId = WP.currentId;
       $('header#header').removeClass('u-hidden');
       history.replaceState({ postId: this.currentId }, null, window.location.href);
