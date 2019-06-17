@@ -145,13 +145,23 @@ body
   overflow: scroll
   p
     max-width: 500px
+  figcaption
+    max-width: 300px
+  iframe
+    max-width: 100%
+
+.wp-block-embed
+  margin-left: 0
+  margin-right: 0
 
 .hide-brush
   cursor: default
   a
     cursor: pointer
 
-.wp-block-image figcaption
-  text-align: left
-  color: $color-black
-  font-size: $font-size-small
+.wp-block-image,
+.wp-block-embed
+  figcaption
+    text-align: left
+    color: $color-black
+    font-size: $font-size-small

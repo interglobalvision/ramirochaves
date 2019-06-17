@@ -1,5 +1,5 @@
 
-  <footer id="footer" class="padding-bottom-tiny hide-brush">
+  <footer id="footer" class="padding-bottom-tiny">
   <?php
     $home_page = get_page_by_path('home');
 
@@ -11,7 +11,7 @@
     <?php
       if (!empty($email)) {
     ?>
-      <div class="grid-item font-light">
+      <div class="grid-item font-light hide-brush">
         <a href="mailto:<?php echo $email; ?>" class="link-underline"><?php echo $email; ?></a>
       </div>
     <?php
