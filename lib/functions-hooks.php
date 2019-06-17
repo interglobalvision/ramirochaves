@@ -39,10 +39,8 @@ function igv_allowed_block_types( $allowed_blocks ) {
 		'core/paragraph',
 		'core/heading',
 		'core/list',
-    'core/audio',
-    'core/video',
-    'core/separator',
+    'core-embed/soundcloud',
     'core-embed/youtube',
-    'core-embed/vimeo'
+    'core-embed/vimeo',
 	);
 }
