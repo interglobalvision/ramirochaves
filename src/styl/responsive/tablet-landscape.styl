@@ -9,14 +9,46 @@
   $margin-mid = ($gutter * 3.5)
   $margin-large = ($gutter * 5)
 
-  $font-size-basic = 16px
+  $font-size-large = 32px
+  $font-size-basic = 18px
+  $font-size-small = 14px
+
+  font-sizes($font-size-basic, false, $font-size-large, false, $font-size-small)
 
   grid-maker(1000px, $gutter, l)
 
   space-maker($margin-micro, $margin-tiny, $margin-small, $margin-basic, $margin-mid, $margin-large)
 
-  font-sizes($font-size-basic)
-
   .desktop-only
     display: initial !important
 
+  .mobile-trigger
+    display: none
+
+  body
+    &.nav-open
+      #project-menu
+        transform: translateX(-100%)
+      #doodle-view, #footer
+        transform: translateX(-25%)
+    &.project-open
+      #project-menu
+        transform: translateX(-400%)
+      #doodle-view, #footer
+        transform: translateX(-100%)
+      #project-holder
+        transform: translateX(-100%)
+
+  #doodle-view, #project-menu, #project-holder, #footer
+    transition: transform 200ms linear
+
+  #project-menu
+    right: -25vw
+    width: 25vw
+
+  #project-holder
+    right: -75vw
+    width: 75vw
+
+  .wp-block-image figcaption
+    font-size: $font-size-small

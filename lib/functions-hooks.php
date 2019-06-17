@@ -25,3 +25,24 @@ function create_custom_pages() {
   update_option( 'show_on_front', 'page' );
 }
 add_filter( 'after_setup_theme', 'create_custom_pages' );
+
+// WP Nav Menu
+function register_igv_nav_menus() {
+  register_nav_menu('projects',__( 'Project Menu' ));
+}
+add_action( 'init', 'register_igv_nav_menus' );
+
+add_filter( 'allowed_block_types', 'igv_allowed_block_types' );
+function igv_allowed_block_types( $allowed_blocks ) {
+	return array(
+		'core/image',
+		'core/paragraph',
+		'core/heading',
+		'core/list',
+    'core/audio',
+    'core/video',
+    'core/separator',
+    'core-embed/youtube',
+    'core-embed/vimeo'
+	);
+}

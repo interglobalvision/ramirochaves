@@ -71,7 +71,7 @@
 
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /* jshint esversion: 6, browser: true, devel: true, indent: 2, curly: true, eqeqeq: true, futurehostile: true, latedef: true, undef: true, unused: true */
-/* global $, document */
+/* global $, document, WP */
 
 // Import dependencies
 
@@ -118,6 +118,15 @@ var Site = function () {
     value: function onReady() {
       _lazysizes2.default.init();
       this.bindMouseMove();
+
+      if (window.location.search === '?v2') {
+        this.currentId = WP.currentId;
+        $('header#header').removeClass('u-hidden');
+        history.replaceState({ postId: this.currentId }, null, window.location.href);
+        this.bindMenuTriggers();
+        this.bindProjectTriggers();
+        this.bindBackButton();
+      }
     }
   }, {
     key: 'fixWidows',
@@ -134,10 +143,10 @@ var Site = function () {
     value: function bindMouseMove() {
       window.addEventListener('mousemove', this.updateCursorPosition, false);
 
-      $('footer').hover(function () {
-        $('.cursor').hide();
+      $('.hide-brush').hover(function () {
+        $('.cursor').addClass('hide');
       }, function () {
-        $('.cursor').show();
+        $('.cursor').removeClass('hide');
       });
     }
   }, {
@@ -152,6 +161,99 @@ var Site = function () {
       $cursor.css({
         'left': left + 'px',
         'top': top + 'px'
+      });
+    }
+  }, {
+    key: 'bindMenuTriggers',
+    value: function bindMenuTriggers() {
+      var _this = this;
+
+      $('.js-menu-trigger').on('click', function (event) {
+        $('body').addClass('nav-open').removeClass('project-open');
+        console.log($(event.target));
+        if ($(event.target).parent('.js-menu-trigger').hasClass('mobile-trigger')) {
+          _this.pushHomeState();
+        }
+      });
+      $('.js-menu-close').on('click', function () {
+        if ($('body').hasClass('project-open')) {
+          _this.closeProject();
+        } else {
+          $('body').removeClass('nav-open');
+        }
+      });
+    }
+  }, {
+    key: 'pushHomeState',
+    value: function pushHomeState() {
+      history.pushState({ postId: WP.homeId }, null, WP.siteUrl);
+      this.currentId = WP.homeId;
+    }
+  }, {
+    key: 'closeProject',
+    value: function closeProject() {
+      $('body').removeClass('project-open');
+      this.pushHomeState();
+    }
+  }, {
+    key: 'bindProjectTriggers',
+    value: function bindProjectTriggers() {
+      var _this2 = this;
+
+      $('#menu-projects .menu-item a').on('click', function (event) {
+        event.preventDefault();
+
+        var postId = $(event.target).attr('data-postid');
+
+        if (postId !== _this2.currentId) {
+          _this2.loadProjectContent(postId);
+        }
+      });
+    }
+  }, {
+    key: 'loadProjectContent',
+    value: function loadProjectContent(postId) {
+      var _this3 = this;
+
+      var url = WP.restEndpoint + 'project?include[]=' + postId;
+
+      $('body').addClass('loading');
+
+      $.ajax({
+        url: url,
+        success: function success(data) {
+          $('body').removeClass('loading');
+
+          $('#project-title').html(data[0].title.rendered);
+          $('#project-content').html(data[0].content.rendered);
+
+          history.pushState({ postId: postId }, null, data[0].link);
+
+          $('body').addClass('project-open').removeClass('nav-open');
+
+          _this3.currentId = postId;
+        },
+        fail: function fail(xhr, textStatus, errorThrown) {
+          $('body').removeClass('loading');
+
+          console.error(errorThrown);
+        }
+      });
+    }
+  }, {
+    key: 'bindBackButton',
+    value: function bindBackButton() {
+      var _this4 = this;
+
+      $(window).bind('popstate', function (event) {
+        // if the event has our history data on it, load the page fragment with AJAX
+        var postId = event.originalEvent.state.postId;
+
+        if (postId !== WP.homeId) {
+          _this4.loadProjectContent(postId);
+        } else {
+          _this4.closeProject();
+        }
       });
     }
   }]);

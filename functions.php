@@ -13,6 +13,9 @@ function scripts_and_styles_method() {
     'siteUrl' => home_url(),
     'themeUrl' => get_template_directory_uri(),
     'isAdmin' => $is_admin,
+    'restEndpoint' => rest_url( 'wp/v2/' ),
+    'homeId' => get_option('page_on_front'),
+    'currentId' => get_queried_object_id(),
   );
 
   // Add home page meta to javascriptVars

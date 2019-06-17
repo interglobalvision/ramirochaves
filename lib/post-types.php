@@ -53,7 +53,8 @@ function register_cpt_project() {
     'query_var' => true,
     'can_export' => true,
     'rewrite' => true,
-    'capability_type' => 'post'
+    'capability_type' => 'post',
+    'show_in_rest' => true,
   );
 
   register_post_type( 'project', $args );

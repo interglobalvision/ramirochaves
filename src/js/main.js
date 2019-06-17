@@ -1,5 +1,5 @@
 /* jshint esversion: 6, browser: true, devel: true, indent: 2, curly: true, eqeqeq: true, futurehostile: true, latedef: true, undef: true, unused: true */
-/* global $, document */
+/* global $, document, WP */
 
 // Import dependencies
 import lazySizes from 'lazysizes';
@@ -33,6 +33,14 @@ class Site {
     lazySizes.init();
     this.bindMouseMove();
 
+    if (window.location.search === '?v2') {
+      this.currentId = WP.currentId;
+      $('header#header').removeClass('u-hidden');
+      history.replaceState({ postId: this.currentId }, null, window.location.href);
+      this.bindMenuTriggers();
+      this.bindProjectTriggers();
+      this.bindBackButton();
+    }
   }
 
   fixWidows() {
@@ -47,12 +55,12 @@ class Site {
   bindMouseMove() {
     window.addEventListener('mousemove', this.updateCursorPosition, false);
 
-    $('footer').hover(
+    $('.hide-brush').hover(
       function() {
-        $('.cursor').hide();
+        $('.cursor').addClass('hide');
       },
       function() {
-        $('.cursor').show();
+        $('.cursor').removeClass('hide');
       }
     );
   }
@@ -67,6 +75,85 @@ class Site {
     $cursor.css({
       'left': left + 'px',
       'top': top + 'px'
+    });
+  }
+
+  bindMenuTriggers() {
+    $('.js-menu-trigger').on('click', (event) => {
+      $('body').addClass('nav-open').removeClass('project-open');
+      console.log($(event.target));
+      if ($(event.target).parent('.js-menu-trigger').hasClass('mobile-trigger')) {
+        this.pushHomeState();
+      }
+    });
+    $('.js-menu-close').on('click', () => {
+      if ($('body').hasClass('project-open')) {
+        this.closeProject();
+      } else {
+        $('body').removeClass('nav-open');
+      }
+    });
+  }
+
+  pushHomeState() {
+    history.pushState({ postId: WP.homeId },null,WP.siteUrl);
+    this.currentId = WP.homeId;
+  }
+
+  closeProject() {
+    $('body').removeClass('project-open');
+    this.pushHomeState();
+  }
+
+  bindProjectTriggers() {
+    $('#menu-projects .menu-item a').on('click', (event) => {
+        event.preventDefault();
+
+        const postId = $(event.target).attr('data-postid');
+
+        if (postId !== this.currentId) {
+          this.loadProjectContent(postId);
+        }
+    });
+  }
+
+  loadProjectContent(postId) {
+    const url = WP.restEndpoint + 'project?include[]=' + postId;
+
+    $('body').addClass('loading');
+
+    $.ajax({
+      url,
+      success: (data) => {
+        $('body').removeClass('loading');
+
+        $('#project-title').html(data[0].title.rendered);
+        $('#project-content').html(data[0].content.rendered);
+
+        history.pushState({ postId: postId },null,data[0].link);
+
+        $('body').addClass('project-open').removeClass('nav-open');
+
+        this.currentId = postId;
+
+      },
+      fail: (xhr, textStatus, errorThrown) => {
+        $('body').removeClass('loading');
+
+        console.error(errorThrown);
+      }
+    });
+  }
+
+  bindBackButton() {
+    $(window).bind('popstate', (event) => {
+      // if the event has our history data on it, load the page fragment with AJAX
+      const { postId } = event.originalEvent.state;
+      if (postId !== WP.homeId) {
+        this.loadProjectContent(postId);
+      } else {
+        this.closeProject();
+      }
     });
   }
 

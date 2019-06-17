@@ -23,11 +23,26 @@ get_template_part('partials/seo');
 
   <?php wp_head(); ?>
 </head>
-<body <?php body_class('loading'); ?>>
+<?php
+$classes = is_singular('project') ? 'loading project-open' : 'loading';
+?>
+<body <?php body_class($classes); ?>>
 <!--[if lt IE 9]><p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p><![endif]-->
 
 <section id="main-container">
 
-  <header id="header">
-    <h1>Ramiro Chaves</h1>
+  <header id="header" class="hide-brush u-hidden">
+    <div class="js-menu-trigger padding-top-small padding-bottom-tiny grid-row u-pointer">
+      <div class="grid-item item-s-12"><span>Projects</span></div>
+    </div>
+    <nav id="project-menu">
+      <div class="grid-row align-content-start">
+        <div class="js-menu-close grid-item item-s-auto padding-top-small padding-bottom-tiny u-pointer">
+          <span>&ShortLeftArrow;</span>
+        </div>
+        <div class="grid-item item-s-12 padding-top-tiny padding-bottom-basic">
+          <?php wp_nav_menu( array( 'theme_location' => 'projects' ) ); ?>
+        </div>
+      </div>
+    </nav>
   </header>

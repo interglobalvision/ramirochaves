@@ -45,3 +45,9 @@ function add_lazysize_on_srcset($attr) {
 
 }
 add_filter('wp_get_attachment_image_attributes', 'add_lazysize_on_srcset');
+
+function igv_add_menu_item_id_data_attr( $atts, $item, $args ) {
+  $atts['data-postid'] = $item->object_id;
+  return $atts;
+}
+add_filter( 'nav_menu_link_attributes', 'igv_add_menu_item_id_data_attr', 10, 3 );
