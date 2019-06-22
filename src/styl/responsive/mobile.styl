@@ -112,7 +112,7 @@ body
     #doodle-view, #footer
       transform: translateX(-100%)
     #project-holder
-      transform: translateX(-100%)
+      transform: translateX(-100%) translateZ(0)
 
 #doodle-view, #project-menu, #project-holder, #footer
   transition: transform 200ms linear
@@ -146,6 +146,7 @@ body
   z-index: 2
   overflow: scroll
   font-weight: 300
+  -webkit-overflow-scrolling: touch
   h1, em
     font-weight: normal
   p
