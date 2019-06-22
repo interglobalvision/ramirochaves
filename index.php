@@ -22,7 +22,7 @@ if (have_posts()) {
           <span>&ShortLeftArrow;</span>
         </div>
         <div class="js-menu-trigger grid-item item-s-auto padding-top-small padding-bottom-tiny u-pointer mobile-trigger">
-          <span>Projects</span>
+          <span>Proyectos</span>
         </div>
         <div class="grid-item item-s-12 padding-top-small">
           <h1 id="project-title" class="font-size-large"><?php the_title(); ?></h1>

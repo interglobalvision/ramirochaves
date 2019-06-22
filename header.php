@@ -33,7 +33,7 @@ $classes = is_singular('project') ? 'loading project-open' : 'loading';
 
   <header id="header" class="hide-brush u-hidden">
     <div class="js-menu-trigger padding-top-small padding-bottom-tiny grid-row u-pointer">
-      <div class="grid-item item-s-12"><span>Projects</span></div>
+      <div class="grid-item item-s-12"><span>Proyectos</span></div>
     </div>
     <nav id="project-menu">
       <div class="grid-row align-content-start">
