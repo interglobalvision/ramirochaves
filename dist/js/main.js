@@ -226,6 +226,8 @@ var Site = function () {
           $('#project-title').html(data[0].title.rendered);
           $('#project-content').html(data[0].content.rendered);
 
+          $('#project-holder').scrollTop(0);
+
           history.pushState({ postId: postId }, null, data[0].link);
 
           $('body').addClass('project-open').removeClass('nav-open');
