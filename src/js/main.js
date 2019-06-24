@@ -81,7 +81,6 @@ class Site {
   bindMenuTriggers() {
     $('.js-menu-trigger').on('click', (event) => {
       $('body').addClass('nav-open').removeClass('project-open');
-      console.log($(event.target));
       if ($(event.target).parent('.js-menu-trigger').hasClass('mobile-trigger')) {
         this.pushHomeState();
       }
@@ -106,7 +105,7 @@ class Site {
   }
 
   bindProjectTriggers() {
-    $('#menu-projects .menu-item a').on('click', (event) => {
+    $('#project-menu .menu-item a').on('click', (event) => {
         event.preventDefault();
 
         const postId = $(event.target).attr('data-postid');

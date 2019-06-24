@@ -170,7 +170,6 @@ var Site = function () {
 
       $('.js-menu-trigger').on('click', function (event) {
         $('body').addClass('nav-open').removeClass('project-open');
-        console.log($(event.target));
         if ($(event.target).parent('.js-menu-trigger').hasClass('mobile-trigger')) {
           _this.pushHomeState();
         }
@@ -200,7 +199,7 @@ var Site = function () {
     value: function bindProjectTriggers() {
       var _this2 = this;
 
-      $('#menu-projects .menu-item a').on('click', function (event) {
+      $('#project-menu .menu-item a').on('click', function (event) {
         event.preventDefault();
 
         var postId = $(event.target).attr('data-postid');
