@@ -16,7 +16,7 @@ if (have_posts()) {
     the_post();
 ?>
   <article id="project-holder" class="hide-brush">
-    <div class="grid-column padding-bottom-mid">
+    <div class="grid-column padding-bottom-large">
       <header class="grid-item no-gutter margin-bottom-basic grid-row justify-between">
         <div class="js-menu-close grid-item item-s-auto padding-top-small padding-bottom-tiny u-pointer mobile-trigger">
           <span>&ShortLeftArrow;</span>
