@@ -118,15 +118,12 @@ var Site = function () {
     value: function onReady() {
       _lazysizes2.default.init();
       this.bindMouseMove();
-
-      if (window.location.search === '?v2' || WP.currentId !== WP.homeId) {
-        this.currentId = WP.currentId;
-        $('header#header').removeClass('u-hidden');
-        history.replaceState({ postId: this.currentId }, null, window.location.href);
-        this.bindMenuTriggers();
-        this.bindProjectTriggers();
-        this.bindBackButton();
-      }
+      this.currentId = WP.currentId;
+      $('header#header').removeClass('u-hidden');
+      history.replaceState({ postId: this.currentId }, null, window.location.href);
+      this.bindMenuTriggers();
+      this.bindProjectTriggers();
+      this.bindBackButton();
     }
   }, {
     key: 'fixWidows',
